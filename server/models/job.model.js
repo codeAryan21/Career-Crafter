@@ -38,4 +38,9 @@ const jobSchema = Schema(
     }, { timestamps: true }
 )
 
+// Indexes for better query performance
+jobSchema.index({ companyId: 1 });
+jobSchema.index({ visible: 1 });
+jobSchema.index({ category: 1, location: 1 });
+
 export const Job = mongoose.model("Job",jobSchema);

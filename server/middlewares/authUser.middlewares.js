@@ -1,22 +1,22 @@
-import { Company } from "../models/company.model.js";
+import { User } from "../models/user.model.js";
 import jwt from "jsonwebtoken"
 import { ApiError } from "../utils/ApiError.js";
 
-export const verifyJWT = async (req,res,next) => {
+export const verifyUserJWT = async (req,res,next) => {
     try {
-        const token = req.headers.token
+       const token = req.headers.token || req.headers.authorization?.split(" ")[1];
         if(!token){
             throw new ApiError(401, "Unauthorized request")
         }
 
         const decodedToken = jwt.verify(token,process.env.JWT_TOKEN_SECRET)
         
-        const company = await Company.findById(decodedToken?.id).select("-password")
-        if (!company) {
+        const user = await User.findById(decodedToken?.id).select("-password")
+        if (!user) {
             throw new ApiError(401, "Invalid Access Token")
         }
     
-        req.company = company;
+        req.user = user;
         next()
 
     } catch (error) {

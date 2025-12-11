@@ -1,18 +1,18 @@
-import './utils/instrument.js'
 import express from 'express'
-import * as Sentry from "@sentry/node"
 import cors from 'cors'
 import 'dotenv/config'
 import connectDB from './dB/dB.js'
-import { clerkWebHooks } from './controllers/webHooks.js'
-import { clerkMiddleware } from '@clerk/express'
 import errorHandler from './middlewares/errorHandler.middleware.js'
+import helmet from 'helmet';
+import mongoSanitize from 'express-mongo-sanitize';
+import xss from 'xss-clean';
+import { apiLimiter } from './middlewares/rateLimiter.middleware.js';
 
 
 import companyRouter from './routes/company.routes.js'
 import jobRouter from './routes/job.routes.js'
 import userRouter from './routes/user.routes.js'
-
+import authRouter from './routes/auth.routes.js'
 
 
 // Initialize express
@@ -22,26 +22,33 @@ const app = express()
 await connectDB()
 
 // Middlewares
-app.use(cors())
-app.use(express.json()) // body parser 
-app.use(clerkMiddleware())
+const corsOptions = {
+    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+    credentials: true,
+    optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions))
+app.use(helmet());
+app.use(mongoSanitize());
+app.use(xss());
+app.use('/api/', apiLimiter);
+app.use(express.json({ limit: '10mb' })) // body parser with size limit
+app.use(express.urlencoded({ extended: true, limit: '10mb' })) 
 
 
 // Route
 app.get('/',(req,res) => res.send("API Working"))
-app.post('/webhooks', clerkWebHooks)
 
 app.use('/api/company', companyRouter);
 app.use('/api/jobs', jobRouter);
 app.use('/api/users', userRouter)
+app.use('/api/auth', authRouter)
 
 
 app.use(errorHandler) // Middlewares
 
 // PORT 
 const PORT = process.env.PORT || 5000
-
-Sentry.setupExpressErrorHandler(app);
 
 app.listen(PORT, ()=> {
     console.log(`⚙️ Server is running at port :  ${PORT}`)

@@ -1,38 +1,45 @@
-import mongoose, {Schema} from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const userSchema = new Schema(
     {
-        _id: {
-            type: String,
-            required: true,
-        },
         username: {
             type: String,
             required: true,
             unique: true,
             lowercase: true,
-            trim: true, 
-            index: true
+            trim: true
         },
-        name: {
+        fullName: {
             type: String,
-            required: true
+            required: true,
+            trim: true
         },
         email: {
             type: String,
             required: true,
             unique: true,
-            lowecase: true,
-            trim: true, 
+            lowercase: true,
+            trim: true
+        },
+        password: {
+            type: String,
+            required: [true, 'Password is required']
         },
         resume: {
-            type: String, 
+            type: String
+        },
+        resetPasswordToken: {
+            type: String,
+        },
+        resetPasswordExpires: {
+            type: Date
         },
         image: {
             type: String, // cloudinary url
-            required: true,
+            required: true
         }
-    },{ timestamps: true }
-)
+    },
+    { timestamps: true }
+);
 
-export const User = mongoose.model("User", userSchema)
+export const User = mongoose.model("User", userSchema);

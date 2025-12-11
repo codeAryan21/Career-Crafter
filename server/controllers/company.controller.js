@@ -16,7 +16,6 @@ const registerCompany = async (req, res) => {
         throw new ApiError(400, "All fields are required")
     }
 
-    // Check if company already exist or not
     const existedCompany = await Company.findOne({ email })
     if (existedCompany) {
         throw new ApiError(409, "Company with this email already exists")
@@ -26,10 +25,6 @@ const registerCompany = async (req, res) => {
     if (!imageLocalPath) {
         throw new ApiError(400, "Image file is required")
     }
-
-    // Encrypt the password
-    const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(password, salt)
 
     let image;
     try {
@@ -41,8 +36,16 @@ const registerCompany = async (req, res) => {
         throw new ApiError(500, "Failed to upload image")
     }
 
+    // check password length
+    if (password.length < 6) {
+        throw new ApiError(400, "Password must be at least 6 characters long");
+    }
+
+    // Encrypt the password
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(password, salt)
+
     try {
-        // Create a new entry in the database
         const company = await Company.create({
             name,
             email,
@@ -67,7 +70,7 @@ const registerCompany = async (req, res) => {
             await deleteFromCloudinary(image.public_id, "image")
         }
 
-        throw new ApiError(500, "Something went wrong while registering a user and image were deleted")
+        throw new ApiError(500, "Something went wrong while registering a company and image were deleted")
     }
 
 }
@@ -146,7 +149,7 @@ const getCompanyJobApplicants = async (req, res) => {
 
     // Find job applications for the user and populate related data
     const applications = await JobApplication.find({companyId})
-    .populate('userId','name image resume')
+    .populate('userId','fullName image resume')
     .populate('jobId','title category location salary level')
     .exec()
 

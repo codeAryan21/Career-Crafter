@@ -10,7 +10,7 @@ const companySchema = Schema(
             type: String,
             required: true,
             unique: true,
-            lowecase: true,
+            lowercase: true,
             trim: true, 
         },
         password: {
@@ -20,6 +20,12 @@ const companySchema = Schema(
         image: {
             type: String, // cloudinary url
             required: true,
+        },
+        resetPasswordToken: {
+            type: String,
+        },
+        resetPasswordExpires: {
+            type: Date
         }
     },{ timestamps: true }
 )

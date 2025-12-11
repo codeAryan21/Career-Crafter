@@ -50,27 +50,31 @@ function JobListing() {
     }, [jobs,selectedCategories,selectedLocation,searchFilter])
 
     return (
-        <div className='container 2xl:px-20 mx-auto flex flex-col lg:flex-row max-lg:space-y-8 py-8'>
+        <div className='container 2xl:px-20 mx-auto py-12 px-4'>
+            <div className='flex flex-col lg:flex-row gap-8'>
             {/* Sidebar */}
-            <div className='w-full lg:w-1/4 bg-white px-4'>
-                {/* Saerch filter from Hero component */}
+            <div className='w-full lg:w-1/4 bg-white px-6 py-6 rounded-2xl shadow-md h-fit lg:sticky lg:top-24'>
+                {/* Search filter from Hero component */}
                 {
                     isSearched && (searchFilter.title != "" || searchFilter.location != "") && (
                         <>
-                            <h3 className='font-medium text-lg mb-4'>Current Search</h3>
-                            <div className='mb-4 text-gray-600'>
+                            <h3 className='font-bold text-lg mb-4 text-gray-800'>Active Filters</h3>
+                            <div className='mb-6 flex flex-wrap gap-2'>
                                 {searchFilter.title && (
-                                    <span className='inline-flex items-center gap-2.5 bg-blue-50 border border-blue-200 px-4 py-1.5 rounded'>
+                                    <span className='inline-flex items-center gap-2 bg-blue-100 text-blue-700 border border-blue-300 px-4 py-2 rounded-full font-medium'>
                                         {searchFilter.title}
-                                        {/* whenever we click on this cross icon the will reset to empty */}
-                                        <img onClick={e => setSearchFilter(prev => ({ ...prev, title: '' }))} className='cursor-pointer' src={assets.cross_icon} alt="" />
+                                        <button onClick={e => setSearchFilter(prev => ({ ...prev, title: '' }))} className='hover:bg-blue-200 rounded-full p-0.5 transition-colors'>
+                                            <img className='w-3 h-3' src={assets.cross_icon} alt="" />
+                                        </button>
                                     </span>
                                 )}
 
                                 {searchFilter.location && (
-                                    <span className='ml-3 inline-flex items-center gap-2.5 bg-yellow-50 border border-yellow-200 px-4 py-1.5 rounded'>
+                                    <span className='inline-flex items-center gap-2 bg-purple-100 text-purple-700 border border-purple-300 px-4 py-2 rounded-full font-medium'>
                                         {searchFilter.location}
-                                        <img onClick={e => setSearchFilter(prev => ({ ...prev, location: '' }))} className='cursor-pointer' src={assets.cross_icon} alt="" />
+                                        <button onClick={e => setSearchFilter(prev => ({ ...prev, location: '' }))} className='hover:bg-purple-200 rounded-full p-0.5 transition-colors'>
+                                            <img className='w-3 h-3' src={assets.cross_icon} alt="" />
+                                        </button>
                                     </span>
                                 )}
                             </div>
@@ -78,25 +82,25 @@ function JobListing() {
                     )
                 }
 
-                <button onClick={e => setShowFilter(prev => !prev)} className='px-6 py-1.5 border border-gray-400, lg:hidden rounded cursor-pointer'>
-                    {showFilter ? "Close" : "Filters"}
+                <button onClick={e => setShowFilter(prev => !prev)} className='px-6 py-2.5 bg-blue-600 text-white font-semibold border-none lg:hidden rounded-xl cursor-pointer hover:bg-blue-700 transition-colors mb-4 w-full'>
+                    {showFilter ? "Hide Filters" : "Show Filters"}
                 </button>
 
                 {/* Category filter */}
                 <div className={showFilter ? " " : 'max-lg:hidden'}>
-                    <h4 className='font-medium text-lg py-4'>Search by Categories</h4>
-                    <ul className='space-y-2 text-gray-600'>
+                    <h4 className='font-bold text-lg py-4 text-gray-800 border-b border-gray-200'>Categories</h4>
+                    <ul className='space-y-3 text-gray-700 mt-4'>
                         {
                             JobCategories.map((category, index) => (
-                                <li className='flex gap-2 items-center' key={index}>
+                                <li className='flex gap-3 items-center hover:bg-blue-50 p-2 rounded-lg transition-colors cursor-pointer' key={index}>
                                     <input 
-                                    className='scale-125' 
+                                    className='w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer' 
                                     type="checkbox" 
+                                    id={`category-${index}`}
                                     onChange={() => handleCategoryChange(category)} 
-                                    // suppose the array contains this categoty already then it will return true and our box is checked 
                                     checked={selectedCategories.includes(category)}
                                     />
-                                    {category}
+                                    <label htmlFor={`category-${index}`} className='cursor-pointer font-medium'>{category}</label>
                                 </li>
                             ))
                         }
@@ -105,19 +109,22 @@ function JobListing() {
 
                 {/* Location filter */}
                 <div className={showFilter ? " " : 'max-lg:hidden'}>
-                    <h4 className='pt-14 font-medium text-lg py-4'>Search by Location</h4>
-                    <ul className='space-y-2 text-gray-600'>
+                    <h4 className='pt-8 font-bold text-lg py-4 text-gray-800 border-b border-gray-200'>Locations</h4>
+                    <ul className='space-y-3 text-gray-700 mt-4'>
                         {
                             JobLocations.map((location, index) => (
-                                <li className='flex gap-2 items-center' key={index}>
+                                <li className='flex gap-3 items-center hover:bg-blue-50 p-2 rounded-lg transition-colors cursor-pointer' key={index}>
                                     <input 
-                                    className='scale-125' 
+                                    className='w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer' 
                                     type="checkbox" 
+                                    id={`location-${index}`}
                                     onChange={() => handleLocationChange(location)} 
                                     checked={selectedLocation.includes(location)} 
                                     />
-                                    <img src={assets.location_icon} alt="Location" className="w-4 h-4" />
-                                    {location}
+                                    <label htmlFor={`location-${index}`} className='cursor-pointer font-medium flex items-center gap-2'>
+                                        <img src={assets.location_icon} alt="Location" className="w-4 h-4 opacity-60" />
+                                        {location}
+                                    </label>
                                 </li>
                             ))
                         }
@@ -127,11 +134,15 @@ function JobListing() {
             </div>
 
             {/* Job Listings */}
-            <section className='w-full lg:w-3/4 text-gray-800 max-lg:px-4 '>
-                <h3 className='font-medium text-3xl py-2' id='job-list'>Latest Jobs</h3>
-                <p className='mb-8'>Get your desired job from top companies</p>
-                <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4'>
-                    {/* we create job card */}
+            <section className='w-full lg:w-3/4 text-gray-800 lg:pl-8'>
+                <div className='mb-8'>
+                    <h3 className='font-bold text-4xl text-gray-800 mb-2' id='job-list'>Latest Jobs</h3>
+                    <p className='text-gray-600 text-lg'>Discover your next career opportunity from top companies</p>
+                    <div className='mt-4 flex items-center gap-2 text-sm text-gray-600'>
+                        <span className='font-semibold text-blue-600'>{filteredJobs.length}</span> jobs found
+                    </div>
+                </div>
+                <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6'>
                     {filteredJobs.slice((currentPage - 1) * 6, currentPage * 6).map((job, index) => (
                         <JobCard key={index} job={job} />
                     ))}
@@ -139,29 +150,35 @@ function JobListing() {
 
                 {/* Pagination */}
                 {filteredJobs.length > 0 && (
-                    <div className='flex items-center justify-center space-x-2 mt-10'>
-                        <a onClick={() => setCurrentPage(Math.max(currentPage-1,1))} href="#job-list">
-                            <img src={assets.left_arrow_icon} alt="" />
+                    <div className='flex items-center justify-center space-x-3 mt-12'>
+                        <a onClick={() => setCurrentPage(Math.max(currentPage-1,1))} href="#job-list" 
+                           className='w-10 h-10 flex items-center justify-center bg-white border-2 border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer'>
+                            <img src={assets.left_arrow_icon} alt="Previous" className='w-5 h-5' />
                         </a>
 
                         {Array.from({ length: Math.ceil(filteredJobs.length / 6) }).map((_, index) => (
                             <a key={index} href="#job-list">
                                 <button
                                     onClick={() => setCurrentPage(index + 1)}
-                                    className={`w-10 h-10 flex items-center justify-center border border-gray-300 rounded cursor-pointer ${currentPage == index + 1 ? 'bg-blue-100 text-blue-500' : 'text-gray-500'}`}>
+                                    className={`w-10 h-10 flex items-center justify-center border-2 rounded-lg font-semibold transition-all ${
+                                        currentPage == index + 1 
+                                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-blue-600 shadow-lg' 
+                                        : 'bg-white text-gray-600 border-gray-300 hover:border-blue-500 hover:bg-blue-50'
+                                    }`}>
                                     {index + 1}
                                 </button>
                             </a>
                         ))}
 
-                        <a onClick={() => setCurrentPage(Math.min(currentPage+1,Math.ceil(filteredJobs.length/6)))} href="#job-list">
-                            <img src={assets.right_arrow_icon} alt="" />
+                        <a onClick={() => setCurrentPage(Math.min(currentPage+1,Math.ceil(filteredJobs.length/6)))} href="#job-list"
+                           className='w-10 h-10 flex items-center justify-center bg-white border-2 border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer'>
+                            <img src={assets.right_arrow_icon} alt="Next" className='w-5 h-5' />
                         </a>
                     </div>
                 )}
 
             </section>
-
+            </div>
         </div>
     )
 }

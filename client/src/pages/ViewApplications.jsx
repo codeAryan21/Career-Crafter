@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
-import { assets, viewApplicationsPageData } from '../assets/assets'
+import { assets } from '../assets/assets'
 import { AppContext } from '../context/AppContext'
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -13,11 +13,11 @@ function ViewApplications() {
     // Function to fetch company Job applications data
     const fetchCompanyJobApplicationsData = async () => {
         try {
-            const { data } = await axios.get(`${backendUrl}/api/compay/applicants`,
+            const { data } = await axios.get(`${backendUrl}/api/company/applicants`,
                 { headers: { token: companyToken } }
             )
             if (data.success) {
-                setApplicants(data.applications.reverse());
+                setApplicants(data.data.reverse());
             } else {
                 toast.error(data.message);
             }
@@ -35,7 +35,7 @@ function ViewApplications() {
     // Function to update the status of a job application
     const updateJobApplicationStatus = async (id, status) => {
         try {
-            const { data } = await axios.post(`${backendUrl}/api/compay/change-status`,
+            const { data } = await axios.post(`${backendUrl}/api/company/change-status`,
                 { id, status },
                 { headers: { token: companyToken } }
             )
@@ -88,7 +88,7 @@ function ViewApplications() {
                                 <td className='px-4 py-2 text-center border-b border-gray-200'>{index + 1}</td>
                                 <td className='px-4 py-2 text-center border-b border-gray-200 flex items-center'>
                                     <img className='w-10 h-10 rounded-full mr-3 max-sm:hidden' src={applicant.userId.image} alt="" />
-                                    <span>{applicant.userId.name}</span>
+                                    <span>{applicant.userId.fullName}</span>
                                 </td>
 
                                 <td className='px-4 py-2 border-b border-gray-200 max-sm:hidden'>{applicant.jobId.title}</td>
