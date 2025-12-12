@@ -66,6 +66,14 @@ const registerUser = async (req, res) => {
 
         const token = generateToken(user._id)
 
+        // Set httpOnly cookie
+        res.cookie('accessToken', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+        });
+
         return res.status(201).json(new ApiResponse(200, { createdUser, token }, "Account created Successfully"))
     } catch (error) {
         console.log("User creation failed", error);
@@ -105,6 +113,14 @@ const loginUser = async (req, res) => {
     const token = generateToken(user._id)
 
     const loggedInUser = await User.findById(user._id).select("-password")
+
+    // Set httpOnly cookie
+    res.cookie('accessToken', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+    });
 
     return res.status(201).json(new ApiResponse(201, { user: loggedInUser, token }, "User loggedIn Successfully"));
 }
@@ -299,5 +315,29 @@ const updateUserResume = async (req, res) => {
     return res.status(200).json(new ApiResponse(200, null, "Resume updated successfully"))
 }
 
-export { registerUser, loginUser, getUserData, applyForJob, getUserJobApplications, updateUserResume, 
+// User logout
+const logoutUser = async (req, res) => {
+    await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            $unset: {
+                refreshToken: 1 
+            }
+        },
+        { new: true }
+    )
+
+    const options = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax'
+    }
+
+    return res
+        .status(200)
+        .clearCookie("accessToken", options)
+        .json(new ApiResponse(200, {}, "User logged out successfully"));
+};
+
+export { registerUser, loginUser, logoutUser, getUserData, applyForJob, getUserJobApplications, updateUserResume, 
         changeCurrentPassword, updateProfileDetails, updateUserImage }

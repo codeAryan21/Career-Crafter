@@ -26,6 +26,9 @@ const companySchema = Schema(
         },
         resetPasswordExpires: {
             type: Date
+        },
+        refreshToken: {
+            type: String
         }
     },{ timestamps: true }
 )

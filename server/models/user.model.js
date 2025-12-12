@@ -37,9 +37,11 @@ const userSchema = new Schema(
         image: {
             type: String, // cloudinary url
             required: true
-        }
-    },
-    { timestamps: true }
+        },
+        refreshToken: {
+            type: String
+        },
+    }, { timestamps: true }
 );
 
 export const User = mongoose.model("User", userSchema);

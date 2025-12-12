@@ -111,13 +111,32 @@ export const AppContextProvider = (props) => {
         }
     }
 
-    const logoutEmployee = () => {
-        setEmployeeToken(null);
-        localStorage.removeItem("employeeToken");
-        setEmployeeData(null);
-        setUserData(null);
-        setUserApplications([]);
-        navigate('/')
+    const logoutEmployee = async () => {
+        try {
+            await axios.post(`${backendUrl}/api/users/logout`, {}, { withCredentials: true });
+        } catch (error) {
+            console.log('Logout error:', error);
+        } finally {
+            setEmployeeToken(null);
+            localStorage.removeItem("employeeToken");
+            setEmployeeData(null);
+            setUserData(null);
+            setUserApplications([]);
+            navigate('/')
+        }
+    }
+
+    const logoutCompany = async () => {
+        try {
+            await axios.post(`${backendUrl}/api/company/logout`, {}, { withCredentials: true });
+        } catch (error) {
+            console.log('Logout error:', error);
+        } finally {
+            setCompanyToken(null);
+            localStorage.removeItem('companyToken');
+            setCompanyData(null);
+            navigate('/')
+        }
     }
 
     useEffect(() => {
@@ -175,7 +194,8 @@ export const AppContextProvider = (props) => {
 
         // misc
         backendUrl,
-        logoutEmployee
+        logoutEmployee,
+        logoutCompany
     }
 
     return (

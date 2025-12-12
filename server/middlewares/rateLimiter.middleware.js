@@ -14,6 +14,7 @@ export const apiLimiter = rateLimit({
     message: 'Too many requests, please try again later',
     standardHeaders: true,
     legacyHeaders: false,
+    skip: (req) => false,
 });
 
 export const uploadLimiter = rateLimit({

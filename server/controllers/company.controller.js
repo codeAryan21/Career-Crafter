@@ -61,6 +61,14 @@ const registerCompany = async (req, res) => {
 
         const token = generateToken(company._id)
 
+        // Set httpOnly cookie
+        res.cookie('companyToken', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 30 * 24 * 60 * 60 * 1000
+        });
+
         return res.status(201).json(new ApiResponse(200, { company: createdCompany, token }, "Company registered Successfully"));
 
     } catch (error) {
@@ -98,6 +106,14 @@ const loginCompany = async (req, res) => {
 
     const token = generateToken(company._id)
     const loggedInUser = await Company.findById(company._id).select("-password")
+
+    // Set httpOnly cookie
+    res.cookie('companyToken', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 30 * 24 * 60 * 60 * 1000
+    });
 
     return res.status(201).json(new ApiResponse(201, { company: loggedInUser, token }, "User loggedIn Successfully"));
 }
@@ -210,7 +226,31 @@ const changeVisibility = async (req, res) => {
     return res.status(200).json(new ApiResponse(200, job, "Job visibility updated successfully"));
 }
 
+// Company logout
+const logoutCompany = async (req, res) => {
+    await Company.findByIdAndUpdate(
+        req.company._id,
+        {
+            $unset: {
+                refreshToken: 1
+            }
+        },
+        { new: true }
+    )
+
+    const options = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax'
+    }
+
+    return res
+        .status(200)
+        .clearCookie("companyToken", options)
+        .json(new ApiResponse(200, {}, "Company logged out successfully"));
+};
+
 export {
-    registerCompany, loginCompany, getCompanyData, postJob, getCompanyJobApplicants, getCompanyPostedJobs,
+    registerCompany, loginCompany, logoutCompany, getCompanyData, postJob, getCompanyJobApplicants, getCompanyPostedJobs,
     changeJobApplicationStatus, changeVisibility
 }

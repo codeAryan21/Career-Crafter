@@ -54,7 +54,7 @@ function RecruiterLogin() {
                 const { data } = await axios.post(`${backendUrl}/api/company/login`, {
                     email,
                     password
-                });
+                }, { withCredentials: true });
 
                 if(data.success){
                     // console.log(data);
@@ -78,7 +78,7 @@ function RecruiterLogin() {
                 formData.append("password", password)
                 formData.append("image", image)
 
-                const { data } = await axios.post(`${backendUrl}/api/company/register`, formData);
+                const { data } = await axios.post(`${backendUrl}/api/company/register`, formData, { withCredentials: true });
 
                 if(data.success){
                     // console.log(data);

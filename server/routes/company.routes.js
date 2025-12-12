@@ -1,18 +1,21 @@
 import { Router } from "express"
-import { changeJobApplicationStatus, changeVisibility, getCompanyData, getCompanyJobApplicants, getCompanyPostedJobs, loginCompany, postJob, registerCompany } from "../controllers/company.controller.js";
+import { changeJobApplicationStatus, changeVisibility, getCompanyData, getCompanyJobApplicants, getCompanyPostedJobs, loginCompany, logoutCompany, postJob, registerCompany } from "../controllers/company.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyCompanyJWT } from "../middlewares/authCompany.middleware.js";
 import { loginLimiter, uploadLimiter } from '../middlewares/rateLimiter.middleware.js';
 import { validateImageUpload } from '../middlewares/fileValidation.middleware.js';
+import { validate } from '../middlewares/validate.middleware.js';
+import { postJobSchema } from "../validators/job.validator.js";
 
 const router = Router();
 
 // Routes for company
 router.post('/register', uploadLimiter, upload.single('image'), validateImageUpload, registerCompany);
 router.post('/login', loginLimiter, loginCompany);
+router.post('/logout', verifyCompanyJWT, logoutCompany);
 
 router.get('/company', verifyCompanyJWT, getCompanyData)
-router.post('/post-job', verifyCompanyJWT, postJob)
+router.post('/post-job', verifyCompanyJWT, validate(postJobSchema), postJob);
 router.get('/applicants', verifyCompanyJWT, getCompanyJobApplicants)
 router.get('/list-jobs', verifyCompanyJWT, getCompanyPostedJobs)
 

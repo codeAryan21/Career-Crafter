@@ -34,7 +34,7 @@ function UserLogin() {
                 const { data } = await axios.post(`${backendUrl}/api/users/login`, {
                     email,
                     password
-                });
+                }, { withCredentials: true });
                 
                 if (data.success) {
                     console.log(data);
@@ -59,7 +59,7 @@ function UserLogin() {
                 formData.append("password", password)
                 formData.append("image", image)
 
-                const { data } = await axios.post(`${backendUrl}/api/users/register`, formData);
+                const { data } = await axios.post(`${backendUrl}/api/users/register`, formData, { withCredentials: true });
 
                 if (data.success) {
                     console.log(data);

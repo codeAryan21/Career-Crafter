@@ -8,9 +8,9 @@ export const validate = (schema) => {
         } catch (error) {
             if (error.errors) {
                 const messages = error.errors.map(err => err.message).join(', ');
-                throw new ApiError(400, messages);
+                return next(new ApiError(400, messages));
             }
-            throw new ApiError(400, 'Validation failed');
+            return next(new ApiError(400, 'Validation failed'));
         }
     };
 };

@@ -5,15 +5,7 @@ import { AppContext } from '../context/AppContext';
 
 function Dashboard() {
     const navigate = useNavigate();
-    const { companyData, setCompanyData, setCompanyToken } = useContext(AppContext);
-
-    // Function to logout for recruiter
-    const logout = () => {
-        setCompanyToken(null);
-        localStorage.removeItem('companyToken');
-        setCompanyData(null)
-        navigate('/')
-    }
+    const { companyData, logoutCompany } = useContext(AppContext);
 
     useEffect(() => {
         if(companyData){
@@ -40,7 +32,7 @@ function Dashboard() {
                             {/* dropdown menu */}
                             <div className='absolute hidden group-hover:block top-0 right-0 z-10 text-black rounded pt-14 cursor-pointer'>
                                 <ul className='list-none m-0 py-2 bg-white rounded-xl text-sm border border-gray-200 shadow-xl min-w-[140px]'>
-                                    <li onClick={logout} className='py-2.5 px-4 hover:bg-red-50 text-red-600 cursor-pointer transition-colors flex items-center gap-2 font-medium'>
+                                    <li onClick={logoutCompany} className='py-2.5 px-4 hover:bg-red-50 text-red-600 cursor-pointer transition-colors flex items-center gap-2 font-medium'>
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                                         </svg>

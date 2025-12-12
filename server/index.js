@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from 'cors'
+import cookieParser from 'cookie-parser'
 import 'dotenv/config'
 import connectDB from './dB/dB.js'
 import errorHandler from './middlewares/errorHandler.middleware.js'
@@ -28,9 +29,8 @@ const corsOptions = {
     optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions))
+app.use(cookieParser())
 app.use(helmet());
-app.use(mongoSanitize());
-app.use(xss());
 app.use('/api/', apiLimiter);
 app.use(express.json({ limit: '10mb' })) // body parser with size limit
 app.use(express.urlencoded({ extended: true, limit: '10mb' })) 
