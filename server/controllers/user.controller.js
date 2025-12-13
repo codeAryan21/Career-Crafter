@@ -34,16 +34,19 @@ const registerUser = async (req, res) => {
     let image;
     try {
         image = await uploadOnCloudinary(imageLocalPath)
-        console.log("Image uploaded successfully", image);
+        // console.log("Image uploaded successfully", image);
 
     } catch (error) {
         console.log("Error while uploading image", error);
         throw new ApiError(500, "Failed to upload image");
     }
 
-    // check password length
-    if (password.length < 6) {
-        throw new ApiError(400, "Password must be at least 6 characters long");
+    // check password strength
+    if (password.length < 8) {
+        throw new ApiError(400, "Password must be at least 8 characters long");
+    }
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/.test(password)) {
+        throw new ApiError(400, "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character");
     }
 
     // Encrypt the password
@@ -268,9 +271,12 @@ const changeCurrentPassword = async (req, res) => {
         throw new ApiError(400, "New password cannot be the same as old password");
     }
 
-    // check password length
-    if (newPassword.length < 6) {
-        throw new ApiError(400, "Password must be at least 6 characters long");
+    // check password strength
+    if (newPassword.length < 8) {
+        throw new ApiError(400, "Password must be at least 8 characters long");
+    }
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/.test(newPassword)) {
+        throw new ApiError(400, "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character");
     }
 
     // Encrypt the password

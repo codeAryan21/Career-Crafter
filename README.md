@@ -7,14 +7,16 @@ Career Crafter is a full-featured job portal web application designed to connect
 ## ✨ Features
 
 ### For Job Seekers
-- 🔍 Browse and search jobs by company, location, and role
+- 🔍 Browse and search jobs by category and location
 - 📝 Apply for jobs directly through the platform
 - 📄 Upload and download resumes
 - 📊 Track application status
 - 👤 Manage your profile
+- 🔐 Secure JWT-based authentication
+- 🔑 Password reset functionality with OTP
 
 ### For Recruiters
-- ➕ Post new job listings
+- ➕ Post new job listings with rich text editor
 - 🛠️ Edit and manage existing jobs
 - 👀 View and manage applications
 - 🔐 Secure recruiter authentication and dashboard
@@ -22,17 +24,22 @@ Career Crafter is a full-featured job portal web application designed to connect
 
 ### General
 - 🖼️ Company branding with logos and details
-- 📱 Responsive design for mobile, tablet, and desktop
+- 📱 Responsive design with Tailwind CSS
 - ☁️ Cloudinary integration for resume/image uploads
+- 🛡️ Security features (rate limiting, XSS protection, data sanitization)
+- 📧 Email functionality with Nodemailer
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** React, Vite, CSS
-- **Backend:** Node.js, Express
-- **Database:** MongoDB
+- **Frontend:** React 19, Vite, Tailwind CSS
+- **Backend:** Node.js, Express 5, JWT Authentication
+- **Database:** MongoDB with Mongoose
 - **Cloud Storage:** Cloudinary
+- **Email:** Nodemailer
+- **Validation:** Zod
+- **Security:** Helmet, XSS Clean, Rate Limiting
 
 ---
 
@@ -41,31 +48,60 @@ Career Crafter is a full-featured job portal web application designed to connect
 ```
 Career Crafter/
 │
-├── client/         # Frontend source code
-│   ├── public/     # Static assets
+├── client/                    # Frontend source code
+│   ├── public/               # Static assets
 │   ├── src/
-│   │   ├── assets/      # Images, icons, etc.
-│   │   ├── components/  # Reusable UI components
-│   │   ├── context/     # React context files
-│   │   ├── pages/       # Page components
-│   │   └── App.jsx      # Main App component
-│   │   └── main.jsx     # Entry point
-│   │   └── index.css    # Global styles
-│   ├── package.json     # Frontend dependencies
-│   └── vite.config.js   # Vite configuration
+│   │   ├── assets/           # Images, icons, etc.
+│   │   ├── components/       # Reusable UI components
+│   │   │   ├── Footer/       # Footer component
+│   │   │   ├── Navbar/       # Navigation component
+│   │   │   └── ...           # Other components
+│   │   ├── context/          # React context files
+│   │   ├── pages/            # Page components
+│   │   │   ├── Home.jsx      # Landing page
+│   │   │   ├── Dashboard.jsx # User/Recruiter dashboard
+│   │   │   ├── AddJob.jsx    # Job posting page
+│   │   │   ├── ManageJobs.jsx# Job management
+│   │   │   └── ...           # Other pages
+│   │   ├── App.jsx           # Main App component
+│   │   ├── main.jsx          # Entry point
+│   │   └── index.css         # Global styles
+│   ├── .env.sample           # Environment variables template
+│   ├── package.json          # Frontend dependencies
+│   ├── vite.config.js        # Vite configuration
+│   └── vercel.json           # Vercel deployment config
 │
-├── server/         # Backend source code
-│   ├── controllers/    # API controllers
-│   ├── dB/             # Database connection
-│   ├── middlewares/    # Auth, error handling, etc.
-│   ├── models/         # Mongoose models
-│   ├── routes/         # Express routes
-│   ├── utils/          # Utility functions
-│   ├── package.json    # Backend dependencies
-│   └── index.js        # Server entry point
+├── server/                   # Backend source code
+│   ├── controllers/          # API controllers
+│   │   ├── auth.controller.js    # Authentication logic
+│   │   ├── company.controller.js # Company management
+│   │   ├── job.controller.js     # Job operations
+│   │   └── user.controller.js    # User management
+│   ├── dB/                   # Database connection
+│   ├── middlewares/          # Custom middlewares
+│   │   ├── authUser.middlewares.js   # User authentication
+│   │   ├── authCompany.middleware.js # Company authentication
+│   │   ├── rateLimiter.middleware.js # Rate limiting
+│   │   └── ...               # Other middlewares
+│   ├── models/               # Mongoose models
+│   │   ├── user.model.js     # User schema
+│   │   ├── company.model.js  # Company schema
+│   │   ├── job.model.js      # Job schema
+│   │   └── jobApplication.model.js # Application schema
+│   ├── routes/               # Express routes
+│   ├── utils/                # Utility functions
+│   │   ├── cloudinary.js     # File upload utilities
+│   │   ├── email.js          # Email utilities
+│   │   └── ...               # Other utilities
+│   ├── validators/           # Input validation schemas
+│   ├── logs/                 # Application logs
+│   ├── .env.sample           # Environment variables template
+│   ├── constants.js          # Application constants
+│   ├── package.json          # Backend dependencies
+│   ├── index.js              # Server entry point
+│   └── vercel.json           # Vercel deployment config
 │
-├── README.md       # Project documentation
-└── ...             # Other config files
+└── README.md                 # Project documentation
 ```
 
 ---
@@ -82,35 +118,79 @@ Career Crafter/
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/codeAryan21/Carrer-Crafter.git
-   cd Career Crafter
+   cd "Career Crafter"
    ```
-2. **Install dependencies:**
+
+2. **Install backend dependencies:**
    ```bash
-   cd client && npm install
-   cd ../server && npm install
+   cd server
+   npm install
    ```
-3. **Set up environment variables:**
-   - See `server/.env.example` for required variables (MongoDB URI, Cloudinary credentials, JWT secret, etc.)
-4. **Start the backend server:**
-   ```bash
-   npm start
-   ```
-5. **Start the frontend:**
+
+3. **Install frontend dependencies:**
    ```bash
    cd ../client
+   npm install
+   ```
+
+4. **Set up environment variables:**
+   
+   **Backend :**
+   ```bash
+   cp .env.sample
+   ```
+   Fill in the required variables:
+   - MongoDB URI
+   - JWT secret and expiry
+   - Cloudinary credentials
+   - SMTP email configuration
+   - Frontend URL
+   
+   **Frontend (.env in client folder):**
+   ```bash
+   cp .env.sample .env
+   ```
+   Set the backend URL (default: http://localhost:5001)
+
+5. **Start the backend server:**
+   ```bash
+   cd server
+   npm start
+   ```
+
+6. **Start the frontend (in a new terminal):**
+   ```bash
+   cd client
    npm run dev
    ```
-6. **Open in browser:**
-   - http://localhost:5173
+
+7. **Open in browser:**
+   - Frontend: http://localhost:5173
+   - Backend API: http://localhost:5001
 
 ---
 
-## 📂 Folder Highlights
-- `client/src/components/` — React UI components
-- `client/src/pages/` — Application pages
-- `server/controllers/` — API controllers
-- `server/models/` — Mongoose models
-- `server/routes/` — Express routes
+## 📂 Key Features Implementation
+
+### Frontend Components
+- `client/src/components/` — Reusable UI components (Navbar, Footer, JobCard, etc.)
+- `client/src/pages/` — Application pages (Home, Dashboard, AddJob, ManageJobs, etc.)
+- `client/src/context/` — React context for state management
+
+### Backend Architecture
+- `server/controllers/` — Business logic (auth, jobs, users, companies)
+- `server/models/` — Database schemas (User, Company, Job, JobApplication)
+- `server/routes/` — API endpoints with proper middleware
+- `server/middlewares/` — Authentication, validation, security, file upload
+- `server/validators/` — Input validation with Zod schemas
+- `server/utils/` — Utility functions (email, cloudinary, tokens)
+
+### Security & Performance
+- Rate limiting and request validation
+- XSS protection and data sanitization
+- JWT-based authentication
+- File upload validation
+- Error handling and logging
 
 ---
 

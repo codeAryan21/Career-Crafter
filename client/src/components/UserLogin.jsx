@@ -14,6 +14,7 @@ function UserLogin() {
     const [email, setEmail] = useState('')
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [showPassword, setShowPassword] = useState(false)
     const [image, setImage] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -146,6 +147,9 @@ function UserLogin() {
                             </label>
                             <p className='text-sm text-gray-700 font-semibold'>Upload your Profile Picture</p>
                         </div>
+                        <button type='button' onClick={() => setIsTextDataSubmitted(false)} className='w-full bg-gray-200 text-gray-700 py-2 px-4 rounded-xl font-medium hover:bg-gray-300 transition-colors mb-4'>
+                            ← Back to Details
+                        </button>
                     </>
 
                     : <>
@@ -170,8 +174,12 @@ function UserLogin() {
 
                         <div className='px-4 py-3.5 flex items-center gap-3 mt-4 rounded-xl border-2 border-gray-200 focus-within:border-blue-500 focus-within:shadow-md transition-all bg-gray-50 focus-within:bg-white'>
                             <img src={assets.lock_icon} alt="" className='w-5 opacity-60' />
-                            <input className='outline-none text-sm w-full bg-transparent' onChange={e => setPassword(e.target.value)} value={password} type="password" placeholder='Create a password' required />
+                            <input className='outline-none text-sm w-full bg-transparent' onChange={e => setPassword(e.target.value)} value={password} type={showPassword ? 'text' : 'password'} placeholder='Create a password' required />
+                            <button type='button' onClick={() => setShowPassword(!showPassword)} className='text-xs text-blue-600 hover:text-blue-700 font-medium'>
+                                {showPassword ? 'Hide' : 'Show'}
+                            </button>
                         </div>
+                        {state === 'SignUp' && <p className='text-xs text-red-500 mt-1'>Must be 8+ characters with uppercase, lowercase, number, and special character</p>}
                     </>
                     }
 

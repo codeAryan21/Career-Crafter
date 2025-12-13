@@ -63,7 +63,10 @@ const resetPassword = async (req, res) => {
 
     if (!user) throw new ApiError(400, 'Invalid or expired OTP')
 
-    if (newPassword.length < 6) throw new ApiError(400, 'Password must be at least 6 characters long')
+    if (newPassword.length < 8) throw new ApiError(400, 'Password must be at least 8 characters long')
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/.test(newPassword)) {
+        throw new ApiError(400, 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character')
+    }
 
     const salt = await bcrypt.genSalt(10)
     user.password = await bcrypt.hash(newPassword, salt)
@@ -123,7 +126,10 @@ const recruiterResetPassword = async (req, res) => {
 
     if (!company) throw new ApiError(400, 'Invalid or expired OTP')
 
-    if (newPassword.length < 6) throw new ApiError(400, 'Password must be at least 6 characters long')
+    if (newPassword.length < 8) throw new ApiError(400, 'Password must be at least 8 characters long')
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/.test(newPassword)) {
+        throw new ApiError(400, 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character')
+    }
 
     const salt = await bcrypt.genSalt(10)
     company.password = await bcrypt.hash(newPassword, salt)

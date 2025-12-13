@@ -14,6 +14,7 @@ function ResetPassword(){
     const [email, setEmail] = useState('')
     const [otp, setOtp] = useState('')
     const [newPassword, setNewPassword] = useState('')
+    const [showPassword, setShowPassword] = useState(false)
     const [loading, setLoading] = useState(false)
 
     const requestOtp = async (e) => {
@@ -37,7 +38,10 @@ function ResetPassword(){
         e.preventDefault()
         if(!otp) return toast.error('OTP is required')
         if(!newPassword) return toast.error('Password is required')
-        if(newPassword.length < 6) return toast.error('Password must be at least 6 characters long')
+        if(newPassword.length < 8) return toast.error('Password must be at least 8 characters long')
+        if(!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/.test(newPassword)) {
+            return toast.error('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character')
+        }
         setLoading(true)
         try{
             const endpoint = isRecruiter ? '/api/auth/recruiter/reset-password' : '/api/auth/reset-password'
@@ -88,7 +92,13 @@ function ResetPassword(){
                             </div>
                             <div>
                                 <label className='block text-sm font-medium text-gray-700 mb-2'>New Password</label>
-                                <input type='password' value={newPassword} onChange={e=>setNewPassword(e.target.value)} className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition' placeholder='Enter new password' />
+                                <div className='relative'>
+                                    <input type={showPassword ? 'text' : 'password'} value={newPassword} onChange={e=>setNewPassword(e.target.value)} className='w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition' placeholder='Enter new password' />
+                                    <button type='button' onClick={() => setShowPassword(!showPassword)} className='absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-blue-600 hover:text-blue-700 font-medium'>
+                                        {showPassword ? 'Hide' : 'Show'}
+                                    </button>
+                                </div>
+                                <p className='text-xs text-gray-500 mt-1'>Must be 8+ characters with uppercase, lowercase, number, and special character</p>
                             </div>
                             <button disabled={loading} className='w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-400 transition-colors shadow-lg'>{loading ? 'Resetting...' : 'Reset Password'}</button>
                             <button type='button' onClick={() => { setStep(1); setOtp(''); setNewPassword(''); }} disabled={loading} className='w-full bg-gray-200 text-gray-700 py-2 px-4 rounded-lg font-medium hover:bg-gray-300 disabled:bg-gray-100 transition-colors'>

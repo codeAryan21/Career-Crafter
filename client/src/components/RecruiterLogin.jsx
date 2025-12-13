@@ -12,6 +12,7 @@ function RecruiterLogin() {
     const [state, setState] = useState('Login')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [showPassword, setShowPassword] = useState(false)
     const [name, setName] = useState('')
 
     const [image, setImage] = useState(false)
@@ -138,6 +139,9 @@ function RecruiterLogin() {
                             </label>
                             <p className='text-sm text-gray-700 font-semibold'>Upload Company Logo</p>
                         </div>
+                        <button type='button' onClick={() => setIsTextDataSubmitted(false)} className='w-full bg-gray-200 text-gray-700 py-2 px-4 rounded-xl font-medium hover:bg-gray-300 transition-colors mb-4'>
+                            ← Back to Details
+                        </button>
                     </>
 
                     : <>
@@ -155,8 +159,12 @@ function RecruiterLogin() {
 
                         <div className='px-4 py-3.5 flex items-center gap-3 mt-4 rounded-xl border-2 border-gray-200 focus-within:border-blue-500 focus-within:shadow-md transition-all bg-gray-50 focus-within:bg-white'>
                             <img src={assets.lock_icon} alt="" className='w-5 opacity-60' />
-                            <input className='outline-none text-sm w-full bg-transparent' onChange={e => setPassword(e.target.value)} value={password} type="password" placeholder='Enter your password' required />
+                            <input className='outline-none text-sm w-full bg-transparent' onChange={e => setPassword(e.target.value)} value={password} type={showPassword ? 'text' : 'password'} placeholder='Enter your password' required />
+                            <button type='button' onClick={() => setShowPassword(!showPassword)} className='text-xs text-blue-600 hover:text-blue-700 font-medium'>
+                                {showPassword ? 'Hide' : 'Show'}
+                            </button>
                         </div>
+                        {state === 'SignUp' && <p className='text-xs text-red-500 mt-1'>Must be 8+ characters with uppercase, lowercase, number, and special character</p>}
 
                         {state == 'Login' && <p className='text-blue-600 text-sm mt-4 cursor-pointer hover:text-blue-700 font-medium' onClick={() => { setShowRecruiterLogin(false); navigate('/forgot-password?type=recruiter') }}>Forgot password?</p>}
                     </>

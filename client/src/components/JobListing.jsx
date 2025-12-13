@@ -37,8 +37,20 @@ function JobListing() {
         const matchesCategory = job => selectedCategories.length == 0 || selectedCategories.includes(job.category);
         const matchesLocation = job => selectedLocation.length == 0 || selectedLocation.includes(job.location);
 
-        const matchesTitle = job => searchFilter.title == "" || job.title.toLowerCase().includes(searchFilter.title.toLowerCase())
-        const matchesSearchLocation = job => searchFilter.location == "" || job.location.toLowerCase().includes(searchFilter.location.toLowerCase());
+        const matchesTitle = job => {
+            if (searchFilter.title == "") return true;
+            const searchTerm = searchFilter.title.toLowerCase();
+            const titleMatch = job.title.toLowerCase().includes(searchTerm) ||
+                             job.category.toLowerCase().includes(searchTerm);
+            return titleMatch;
+        }
+        
+        const matchesSearchLocation = job => {
+            if (searchFilter.location == "") return true;
+            const searchLocation = searchFilter.location.toLowerCase();
+            const locationMatch = job.location.toLowerCase().includes(searchLocation);
+            return locationMatch;
+        }
 
         // we use reverse because we want the latest data at the top of the search result
         const newFilteredJobs = jobs.slice().reverse().filter(
