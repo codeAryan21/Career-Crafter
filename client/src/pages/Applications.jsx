@@ -141,16 +141,16 @@ function Applications() {
                                 userApplications.map((job, index) => true ? (
                                     <tr key={index} className='hover:bg-blue-50 transition-colors'>
                                         <td className='py-4 px-6 flex items-center border-b border-gray-100 gap-3'>
-                                            <img className='w-10 h-10 rounded-lg object-contain bg-gray-50 p-1' src={job.companyId.image} alt="" />
-                                            <span className='font-semibold text-gray-800'>{job.companyId.name}</span>
+                                            <img className='w-10 h-10 rounded-lg object-contain bg-gray-50 p-1' src={job.companyId?.image || assets.company_icon} alt="" />
+                                            <span className='font-semibold text-gray-800'>{job.companyId?.name || 'Company'}</span>
                                         </td>
-                                        <td className='py-4 px-6 border-b border-gray-100 font-medium text-gray-700'>{job.jobId.title}</td>
+                                        <td className='py-4 px-6 border-b border-gray-100 font-medium text-gray-700'>{job.jobId?.title || 'Job Title'}</td>
                                         <td className='py-4 px-6 border-b border-gray-100 max-sm:hidden text-gray-600'>
                                             <span className='inline-flex items-center gap-1'>
                                                 <svg className='w-4 h-4' fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                                 </svg>
-                                                {job.jobId.location}
+                                                {job.jobId?.location || 'Location'}
                                             </span>
                                         </td>
                                         <td className='py-4 px-6 border-b border-gray-100 max-sm:hidden text-gray-600'>{moment(job.createdAt).format('ll')}</td>

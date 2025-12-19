@@ -17,6 +17,12 @@ import UserLogin from './components/UserLogin'
 import UserProfile from './components/UserProfile'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
+import CareerTools from './pages/CareerTools'
+import CompanyProfile from './components/CompanyProfile'
+import PublicCompanyProfile from './components/PublicCompanyProfile'
+import PublicUserProfile from './components/PublicUserProfile'
+import RecruiterAnalytics from './components/RecruiterAnalytics'
+import FAQPage from './pages/FAQPage'
 
 function App() {
 
@@ -35,18 +41,25 @@ function App() {
           <Route path="/profile" element={<UserProfile />} />
           <Route path='/applications' element={<Applications />} />
           <Route path='/apply-job/:id' element={<ApplyJobs />} />
+          <Route path='/career-tools' element={<CareerTools />} />
         </>
           : null
         }
 
+        <Route path='/company/:companyId' element={<PublicCompanyProfile />} />
+        <Route path='/user/:userId' element={<PublicUserProfile />} />
+        <Route path='/faq' element={<FAQPage />} />
         <Route path='/dashboard' element={<Dashboard />}>
           {/* If user have company token then only we show these pages to user */}
           {companyToken ? <>
+            <Route path='analytics' element={<RecruiterAnalytics />} />
             <Route path='add-job' element={<AddJob />} />
             <Route path='manage-jobs' element={<ManageJobs />} />
             <Route path='view-applications' element={<ViewApplications />} />
+            <Route path='company-profile' element={<CompanyProfile />} />
+          </> : <>
+            <Route path='*' element={<div className="flex items-center justify-center h-screen"><p className="text-xl text-gray-600">Please log in as a recruiter to access this page.</p></div>} />
           </>
-            : null
           }
         </Route>
       </Routes>

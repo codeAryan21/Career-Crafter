@@ -187,7 +187,7 @@ const getUserJobApplications = async (req, res) => {
 
 // update user profile details
 const updateProfileDetails = async (req, res) => {
-    const { fullName, username } = req.body
+    const { fullName, username, skills, experience, education } = req.body
 
     if (!fullName) {
         throw new ApiError(400, "Fullname is required")
@@ -196,14 +196,20 @@ const updateProfileDetails = async (req, res) => {
         throw new ApiError(400, "Username is required")
     }
 
+    const updateData = {
+        fullName,
+        username
+    };
+
+    // Add profile sections if provided
+    if (skills !== undefined) updateData['profile.skills'] = skills;
+    if (experience !== undefined) updateData['profile.experience'] = experience;
+    if (education !== undefined) updateData['profile.education'] = education;
+
     const user = await User.findByIdAndUpdate(
         req.user?._id,
-        {
-            $set: {
-                fullName,
-                username
-            }
-        }, { new: true }
+        { $set: updateData },
+        { new: true }
     ).select("-password")
 
     return res.status(200).json(new ApiResponse(200, user, "Profile details updated successfully"))
@@ -345,5 +351,21 @@ const logoutUser = async (req, res) => {
         .json(new ApiResponse(200, {}, "User logged out successfully"));
 };
 
+// Get public user profile (for recruiters to view)
+const getPublicUserProfile = async (req, res) => {
+    const { userId } = req.params;
+    
+    const user = await User.findById(userId)
+        .select('-password -resetPasswordToken -resetPasswordExpires -refreshToken');
+    
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+    
+    return res.status(200).json(
+        new ApiResponse(200, user, "User profile fetched successfully")
+    );
+};
+
 export { registerUser, loginUser, logoutUser, getUserData, applyForJob, getUserJobApplications, updateUserResume, 
-        changeCurrentPassword, updateProfileDetails, updateUserImage }
+        changeCurrentPassword, updateProfileDetails, updateUserImage, getPublicUserProfile }

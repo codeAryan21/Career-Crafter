@@ -14,6 +14,9 @@ Career Crafter is a full-featured job portal web application designed to connect
 - 👤 Manage your profile
 - 🔐 Secure JWT-based authentication
 - 🔑 Password reset functionality with OTP
+- 🤖 **AI-powered job recommendations** based on skills and preferences
+- 📋 **Resume parser** to extract skills and experience from PDFs
+- 🔧 **Resume builder** with multiple templates and PDF export
 
 ### For Recruiters
 - ➕ Post new job listings with rich text editor
@@ -28,6 +31,8 @@ Career Crafter is a full-featured job portal web application designed to connect
 - ☁️ Cloudinary integration for resume/image uploads
 - 🛡️ Security features (rate limiting, XSS protection, data sanitization)
 - 📧 Email functionality with Nodemailer
+- 🎯 **Smart job matching** algorithm
+- 📈 **User preference management** for personalized experience
 
 ---
 
@@ -40,6 +45,8 @@ Career Crafter is a full-featured job portal web application designed to connect
 - **Email:** Nodemailer
 - **Validation:** Zod
 - **Security:** Helmet, XSS Clean, Rate Limiting
+- **AI/ML:** PDF parsing, Job recommendation engine
+- **PDF Generation:** Puppeteer
 
 ---
 
@@ -173,17 +180,17 @@ Career Crafter/
 ## 📂 Key Features Implementation
 
 ### Frontend Components
-- `client/src/components/` — Reusable UI components (Navbar, Footer, JobCard, etc.)
-- `client/src/pages/` — Application pages (Home, Dashboard, AddJob, ManageJobs, etc.)
+- `client/src/components/` — Reusable UI components (Navbar, Footer, JobCard, **ResumeParser, JobRecommendations, ResumeBuilder, Preferences**, etc.)
+- `client/src/pages/` — Application pages (Home, Dashboard, AddJob, ManageJobs, **CareerTools**, etc.)
 - `client/src/context/` — React context for state management
 
 ### Backend Architecture
-- `server/controllers/` — Business logic (auth, jobs, users, companies)
-- `server/models/` — Database schemas (User, Company, Job, JobApplication)
+- `server/controllers/` — Business logic (auth, jobs, users, companies, **resume**)
+- `server/models/` — Database schemas (User, Company, Job, JobApplication, **Resume**)
 - `server/routes/` — API endpoints with proper middleware
 - `server/middlewares/` — Authentication, validation, security, file upload
 - `server/validators/` — Input validation with Zod schemas
-- `server/utils/` — Utility functions (email, cloudinary, tokens)
+- `server/utils/` — Utility functions (email, cloudinary, tokens, **resume parsing, PDF generation, job recommendations**)
 
 ### Security & Performance
 - Rate limiting and request validation

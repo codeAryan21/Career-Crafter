@@ -61,6 +61,37 @@ function ManageJobs() {
         }
     }
 
+    // Function to delete job
+    const deleteJob = async (id) => {
+        if (!confirm('Are you sure you want to delete this job? This action cannot be undone.')) {
+            return;
+        }
+        
+        try {
+            const { data } = await axios.delete(`${backendUrl}/api/company/delete-job`,
+                { 
+                    data: { jobId: id },
+                    headers: { token: companyToken } 
+                }
+            );
+
+            if (data.success) {
+                toast.success(data.message);
+                fetchCompanyJob();
+            } else {
+                toast.error(data.message);
+            }
+
+        } catch (error) {
+            toast.error(
+                error.response?.data?.message ||
+                (error.response && JSON.stringify(error.response.data)) ||
+                error.message ||
+                "An error occurred. Please try again."
+            );
+        }
+    }
+
     useEffect(() => {
         if (companyToken) {
             fetchCompanyJob();
@@ -83,22 +114,28 @@ function ManageJobs() {
 
                     <thead>
                         <tr className='bg-gradient-to-r from-blue-50 to-indigo-50 border-b-2 border-blue-200'>
-                            <th className='px-6 py-4 text-left font-semibold text-gray-700 max-sm:hidden'>#</th>
-                            <th className='px-6 py-4 text-left font-semibold text-gray-700'>Job Title</th>
-                            <th className='px-6 py-4 text-left font-semibold text-gray-700 max-sm:hidden'>Date</th>
-                            <th className='px-6 py-4 text-left font-semibold text-gray-700 max-sm:hidden'>Location</th>
-                            <th className='px-6 py-4 text-center font-semibold text-gray-700'>Applicants</th>
-                            <th className='px-6 py-4 text-left font-semibold text-gray-700'>Visible</th>
+                            <th className='px-3 sm:px-6 py-4 text-left font-semibold text-gray-700 max-sm:hidden'>#</th>
+                            <th className='px-3 sm:px-6 py-4 text-left font-semibold text-gray-700'>Job Title</th>
+                            <th className='px-3 sm:px-6 py-4 text-left font-semibold text-gray-700 max-md:hidden'>Date</th>
+                            <th className='px-3 sm:px-6 py-4 text-left font-semibold text-gray-700 max-lg:hidden'>Location</th>
+                            <th className='px-3 sm:px-6 py-4 text-center font-semibold text-gray-700'>Apps</th>
+                            <th className='px-3 sm:px-6 py-4 text-left font-semibold text-gray-700 max-sm:hidden'>Visible</th>
+                            <th className='px-3 sm:px-6 py-4 text-center font-semibold text-gray-700'>Action</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         {jobs.map((job, index) => (
                             <tr key={index} className='text-gray-700 hover:bg-blue-50 transition-colors'>
-                                <td className='px-6 py-4 border-b border-gray-100 max-sm:hidden font-medium text-gray-500'>{index + 1}</td>
-                                <td className='px-6 py-4 border-b border-gray-100 font-semibold text-gray-800'>{job.title}</td>
-                                <td className='px-6 py-4 border-b border-gray-100 max-sm:hidden text-gray-600'>{moment(job.date).format('ll')}</td>
-                                <td className='px-6 py-4 border-b border-gray-100 max-sm:hidden'>
+                                <td className='px-3 sm:px-6 py-4 border-b border-gray-100 max-sm:hidden font-medium text-gray-500'>{index + 1}</td>
+                                <td className='px-3 sm:px-6 py-4 border-b border-gray-100'>
+                                    <div className='font-semibold text-gray-800'>{job.title}</div>
+                                    <div className='sm:hidden text-xs text-gray-500 mt-1'>
+                                        {moment(job.date).format('MMM DD')} • {job.location}
+                                    </div>
+                                </td>
+                                <td className='px-3 sm:px-6 py-4 border-b border-gray-100 max-md:hidden text-gray-600'>{moment(job.date).format('ll')}</td>
+                                <td className='px-3 sm:px-6 py-4 border-b border-gray-100 max-lg:hidden'>
                                     <span className='inline-flex items-center gap-1 text-gray-600'>
                                         <svg className='w-4 h-4' fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -107,16 +144,33 @@ function ManageJobs() {
                                         {job.location}
                                     </span>
                                 </td>
-                                <td className='px-6 py-4 border-b border-gray-100 text-center'>
-                                    <span className='inline-flex items-center justify-center bg-blue-100 text-blue-700 font-bold px-3 py-1 rounded-full text-sm'>
+                                <td className='px-3 sm:px-6 py-4 border-b border-gray-100 text-center'>
+                                    <span className='inline-flex items-center justify-center bg-blue-100 text-blue-700 font-bold px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm'>
                                         {job.applicants}
                                     </span>
                                 </td>
-                                <td className='px-6 py-4 border-b border-gray-100'>
+                                <td className='px-3 sm:px-6 py-4 border-b border-gray-100 max-sm:hidden'>
                                     <label className='relative inline-flex items-center cursor-pointer'>
                                         <input onChange={() => toggleJobVisibility(job._id)} type="checkbox" checked={job.visible} className='sr-only peer' />
                                         <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                                     </label>
+                                </td>
+                                <td className='px-3 sm:px-6 py-4 border-b border-gray-100 text-center'>
+                                    <div className='flex items-center justify-center gap-2'>
+                                        <label className='sm:hidden relative inline-flex items-center cursor-pointer'>
+                                            <input onChange={() => toggleJobVisibility(job._id)} type="checkbox" checked={job.visible} className='sr-only peer' />
+                                            <div className="w-8 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                                        </label>
+                                        <button 
+                                            onClick={() => deleteJob(job._id)}
+                                            className='bg-red-100 hover:bg-red-200 text-red-600 p-1.5 sm:p-2 rounded-lg transition-colors'
+                                            title='Delete Job'
+                                        >
+                                            <svg className='w-4 h-4 sm:w-5 sm:h-5' fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         ))}

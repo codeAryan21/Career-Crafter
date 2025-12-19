@@ -253,7 +253,134 @@ const logoutCompany = async (req, res) => {
         .json(new ApiResponse(200, {}, "Company logged out successfully"));
 };
 
+// Update company profile
+const updateCompanyProfile = async (req, res) => {
+    const { description, website, industry, companySize, location, founded } = req.body;
+    
+    const company = await Company.findByIdAndUpdate(
+        req.company._id,
+        { 
+            $set: {
+                description: description || "",
+                website: website || "",
+                industry: industry || "",
+                companySize: companySize || "1-10",
+                location: location || "",
+                founded: founded || ""
+            }
+        },
+        { new: true }
+    ).select('-password');
+
+    if (!company) {
+        throw new ApiError(404, "Company not found");
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, company, "Company profile updated successfully")
+    );
+};
+
+// Get public company profile (for users to view)
+const getPublicCompanyProfile = async (req, res) => {
+    const { companyId } = req.params;
+    
+    const company = await Company.findById(companyId)
+        .select('-password -email -resetPasswordToken -resetPasswordExpires -refreshToken');
+    
+    if (!company) {
+        throw new ApiError(404, "Company not found");
+    }
+
+    // Get company's active jobs count
+    const activeJobsCount = await Job.countDocuments({ companyId, visible: true });
+    
+    return res.status(200).json(
+        new ApiResponse(200, { ...company.toObject(), activeJobsCount }, "Company profile fetched successfully")
+    );
+};
+
+// Get company analytics
+const getCompanyAnalytics = async (req, res) => {
+    const companyId = req.company._id;
+    
+    // Get total jobs posted
+    const totalJobs = await Job.countDocuments({ companyId });
+    const activeJobs = await Job.countDocuments({ companyId, visible: true });
+    
+    // Get total applications
+    const totalApplications = await JobApplication.countDocuments({ companyId });
+    
+    // Get applications by status
+    const pendingApplications = await JobApplication.countDocuments({ companyId, status: 'Pending' });
+    const acceptedApplications = await JobApplication.countDocuments({ companyId, status: 'Accepted' });
+    const rejectedApplications = await JobApplication.countDocuments({ companyId, status: 'Rejected' });
+    
+    // Get recent applications (last 30 days)
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const recentApplications = await JobApplication.countDocuments({ 
+        companyId, 
+        createdAt: { $gte: thirtyDaysAgo } 
+    });
+    
+    // Get top performing jobs
+    const topJobs = await JobApplication.aggregate([
+        { $match: { companyId } },
+        { $group: { _id: '$jobId', applicationCount: { $sum: 1 } } },
+        { $sort: { applicationCount: -1 } },
+        { $limit: 5 },
+        { $lookup: { from: 'jobs', localField: '_id', foreignField: '_id', as: 'job' } },
+        { $unwind: '$job' },
+        { $project: { title: '$job.title', applicationCount: 1 } }
+    ]);
+    
+    const analytics = {
+        totalJobs,
+        activeJobs,
+        totalApplications,
+        pendingApplications,
+        acceptedApplications,
+        rejectedApplications,
+        recentApplications,
+        topJobs
+    };
+    
+    return res.status(200).json(
+        new ApiResponse(200, analytics, "Analytics fetched successfully")
+    );
+};
+
+// Delete job
+const deleteJob = async (req, res) => {
+    const { jobId } = req.body;
+    const companyId = req.company._id;
+    
+    if (!isValidObjectId(jobId)) {
+        throw new ApiError(400, "Invalid job ID");
+    }
+    
+    const job = await Job.findById(jobId);
+    if (!job) {
+        throw new ApiError(404, "Job not found");
+    }
+    
+    // Check if job belongs to company
+    if (job.companyId.toString() !== companyId.toString()) {
+        throw new ApiError(403, "Unauthorized to delete this job");
+    }
+    
+    // Delete job applications for this job
+    await JobApplication.deleteMany({ jobId });
+    
+    // Delete the job
+    await Job.findByIdAndDelete(jobId);
+    
+    return res.status(200).json(
+        new ApiResponse(200, {}, "Job deleted successfully")
+    );
+};
+
 export {
     registerCompany, loginCompany, logoutCompany, getCompanyData, postJob, getCompanyJobApplicants, getCompanyPostedJobs,
-    changeJobApplicationStatus, changeVisibility
+    changeJobApplicationStatus, changeVisibility, updateCompanyProfile, getPublicCompanyProfile, getCompanyAnalytics, deleteJob
 }

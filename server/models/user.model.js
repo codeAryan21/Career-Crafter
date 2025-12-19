@@ -28,6 +28,39 @@ const userSchema = new Schema(
         resume: {
             type: String
         },
+        parsedResume: {
+            skills: [String],
+            experience: String,
+            education: String,
+            summary: String
+        },
+        preferences: {
+            jobCategories: [String],
+            locations: [String],
+            salaryRange: {
+                min: Number,
+                max: Number
+            }
+        },
+        profile: {
+            skills: [String],
+            experience: [{
+                company: String,
+                position: String,
+                startDate: String,
+                endDate: String,
+                current: Boolean,
+                description: String
+            }],
+            education: [{
+                institution: String,
+                degree: String,
+                field: String,
+                startDate: String,
+                endDate: String,
+                gpa: String
+            }]
+        },
         resetPasswordToken: {
             type: String,
         },

@@ -59,7 +59,6 @@ export const AppContextProvider = (props) => {
         try {
             const { data } = await axios.get(`${backendUrl}/api/company/company`, { headers: { token: companyToken } })
             if (data.success) {
-                console.log(data);
                 setCompanyData(data.data);
             } else {
                 toast.error(data.message);
@@ -187,6 +186,7 @@ export const AppContextProvider = (props) => {
         // fetchers
         fetchUserData,
         fetchUserApplications,
+        fetchCompanyData,
 
         // user info / apps
         userData, setUserData,

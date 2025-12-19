@@ -84,6 +84,22 @@ export const JobCategories = [
     "Management",
     "Marketing",
     "Cybersecurity",
+
+    // Few more categories
+    "Artificial Intelligence",
+    "Machine Learning",
+    "DevOps",
+    "Cloud Computing",
+    "Blockchain",
+    "Mobile App Development",
+    "Web Development",
+    "Game Development",
+    "Quality Assurance (QA)",
+    "Product Management",
+    "Business Analysis",
+    "UI/UX Design",
+    "Technical Support",
+    "IT Consulting"
 ]
 
 export const JobLocations = [
@@ -93,7 +109,32 @@ export const JobLocations = [
     "Mumbai",
     "California",
     "Chennai",
-    "New York"
+    "New York",
+
+    // Few more Locations in India
+    "Pune",
+    "Noida",
+    "Gurgaon",
+    "Delhi",
+    "Kolkata",
+    "Ahmedabad",
+    "Indore",
+    "Jaipur",
+
+    // Few more Locations in India
+    "San Francisco",
+    "Seattle",
+    "Austin",
+    "Toronto",
+    "London",
+    "Berlin",
+    "Singapore",
+    "Sydney",
+    "Dubai",
+
+    // Remote options
+    "Remote",
+    "Hybrid"
 ]
 
 // Sample data for Manage Jobs Page

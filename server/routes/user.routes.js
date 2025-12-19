@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { applyForJob, getUserData, getUserJobApplications, updateUserResume, registerUser, loginUser, logoutUser, changeCurrentPassword, updateProfileDetails, updateUserImage } from '../controllers/user.controller.js'
+import { applyForJob, getUserData, getUserJobApplications, updateUserResume, registerUser, loginUser, logoutUser, changeCurrentPassword, updateProfileDetails, updateUserImage, getPublicUserProfile } from '../controllers/user.controller.js'
 import { upload } from '../middlewares/multer.middleware.js'
 import { verifyUserJWT } from '../middlewares/authUser.middlewares.js'
 import { loginLimiter, uploadLimiter } from '../middlewares/rateLimiter.middleware.js';
@@ -23,5 +23,8 @@ router.post('/change-password', verifyUserJWT, changeCurrentPassword)
 
 router.patch('/update-profile', verifyUserJWT, updateProfileDetails)
 router.patch('/update-image', uploadLimiter, upload.single('image'), validateImageUpload, verifyUserJWT, updateUserImage);
+
+// Public user profile route
+router.get('/profile/:userId', getPublicUserProfile);
 
 export default router

@@ -14,6 +14,7 @@ import companyRouter from './routes/company.routes.js'
 import jobRouter from './routes/job.routes.js'
 import userRouter from './routes/user.routes.js'
 import authRouter from './routes/auth.routes.js'
+import resumeRouter from './routes/resume.routes.js'
 
 
 // Initialize express
@@ -43,6 +44,7 @@ app.use('/api/company', companyRouter);
 app.use('/api/jobs', jobRouter);
 app.use('/api/users', userRouter)
 app.use('/api/auth', authRouter)
+app.use('/api/resume', resumeRouter)
 
 
 app.use(errorHandler) // Middlewares

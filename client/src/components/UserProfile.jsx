@@ -2,6 +2,8 @@ import { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 import Navbar from './Navbar/Navbar';
 import Footer from './Footer/Footer';
+import ProfileSections from './ProfileSections';
+import ContextualFAQ from './ContextualFAQ';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
@@ -9,10 +11,16 @@ import axios from 'axios';
 function Profile() {
     const { employeeData, employeeToken, fetchUserData, backendUrl, logoutEmployee } = useContext(AppContext);
 
-    const [isEditing, setIsEditing] = useState(false);
+    const [isEditingBasic, setIsEditingBasic] = useState(false);
+    const [isEditingProfile, setIsEditingProfile] = useState(false);
     const [fullName, setFullName] = useState(employeeData?.fullName || "");
     const [username, setUsername] = useState(employeeData?.username || "");
     const [image, setImage] = useState(null);
+    const [profileSections, setProfileSections] = useState({
+        skills: employeeData?.profile?.skills || [],
+        experience: employeeData?.profile?.experience || [],
+        education: employeeData?.profile?.education || []
+    });
 
     const [resume, setResume] = useState(null);
     const [isResumeEdit, setIsResumeEdit] = useState(false);
@@ -27,7 +35,13 @@ function Profile() {
     const updateProfile = async () => {
         try {
             const { data } = await axios.patch(`${backendUrl}/api/users/update-profile`,
-                { fullName, username },
+                { 
+                    fullName, 
+                    username,
+                    skills: profileSections.skills,
+                    experience: profileSections.experience,
+                    education: profileSections.education
+                },
                 { headers: { token: employeeToken } }
             )
 
@@ -46,7 +60,8 @@ function Profile() {
                 "An error occurred. Please try again."
             );
         }
-        setIsEditing(false);
+        setIsEditingBasic(false);
+        setIsEditingProfile(false);
     }
 
     // Function to update user cover Image
@@ -73,7 +88,7 @@ function Profile() {
                 "An error occurred. Please try again."
             );
         }
-        setIsEditing(false);
+        setIsEditingBasic(false);
     }
 
     // Function to update password
@@ -134,7 +149,7 @@ function Profile() {
         setResume(null);
     }
 
-    const handleSave = () => {
+    const handleSaveBasic = () => {
         if (image) {
             updateImage();
         }
@@ -143,13 +158,18 @@ function Profile() {
         }
     }
 
+    const handleSaveProfile = () => {
+        updateProfile();
+    }
+
     return (
         <div className="flex flex-col min-h-screen bg-gray-50">
             <Navbar />
 
             <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-10">
                 {/* Profile Header */}
-                <div className="relative bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl shadow-lg p-8 text-white">
+                <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl shadow-lg p-8 text-white">
+                    
                     <div className="flex flex-col sm:flex-row items-center gap-6">
                         {/* Profile Image */}
                         <div className="relative">
@@ -158,7 +178,7 @@ function Profile() {
                                 src={image ? URL.createObjectURL(image) : employeeData.image}
                                 alt="profile"
                             />
-                            {isEditing && (
+                            {isEditingBasic && (
                                 <>
                                     <label
                                         htmlFor="image"
@@ -187,7 +207,7 @@ function Profile() {
                         {/* Name & Email */}
                         <div className="text-center sm:text-left flex-1">
                             <p className="text-sm opacity-80">{employeeData.email}</p>
-                            {isEditing ? (
+                            {isEditingBasic ? (
                                 <div className="space-y-3 mt-3">
                                     <input
                                         type="text"
@@ -208,6 +228,14 @@ function Profile() {
                                 <div className="mt-3">
                                     <h2 className="text-2xl font-bold">{employeeData.fullName}</h2>
                                     <p className="opacity-90">@{employeeData.username}</p>
+                                    <div className="mt-2 flex items-center gap-4 text-sm opacity-80">
+                                        <span>Member since {new Date(employeeData.createdAt).getFullYear()}</span>
+                                        {employeeData.resume && (
+                                            <span className="bg-white/20 px-2 py-1 rounded-full text-xs">
+                                                Resume uploaded
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -216,33 +244,34 @@ function Profile() {
 
                 {/* Profile Details */}
                 <div className="bg-white shadow-md rounded-2xl p-8 mt-8 space-y-10">
-                    {/* Buttons */}
-                    <div className="flex gap-4 justify-center sm:justify-start">
-                        {isEditing ? (
-                            <>
+                    {/* Basic Info Section */}
+                    <div className="border-b pb-6">
+                        <div className="flex gap-4 justify-between items-center mb-4">
+                            <h2 className="text-xl font-semibold text-gray-800">Basic Information</h2>
+                            {isEditingBasic ? (
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={handleSaveBasic}
+                                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow-md transition text-sm"
+                                    >
+                                        Save
+                                    </button>
+                                    <button
+                                        onClick={() => setIsEditingBasic(false)}
+                                        className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg shadow-md transition text-sm"
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            ) : (
                                 <button
-                                    onClick={handleSave}
-                                    // onClick={() => { updateProfile(); updateImage(); }}
-
-                                    className="bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-lg shadow-md transition"
+                                    onClick={() => setIsEditingBasic(true)}
+                                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-md transition text-sm"
                                 >
-                                    Save Changes
+                                    Edit Basic Info
                                 </button>
-                                <button
-                                    onClick={() => setIsEditing(false)}
-                                    className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-5 py-2.5 rounded-lg shadow-md transition"
-                                >
-                                    Cancel
-                                </button>
-                            </>
-                        ) : (
-                            <button
-                                onClick={() => setIsEditing(true)}
-                                className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg shadow-md transition"
-                            >
-                                Edit Profile
-                            </button>
-                        )}
+                            )}
+                        </div>
                     </div>
 
                     {/* Change Password */}
@@ -318,7 +347,44 @@ function Profile() {
                                 </div>
                             )}
                         </div>
+                        <ContextualFAQ type="upload" />
                     </section>
+
+                    {/* Professional Profile Section */}
+                    <div className="border-t pt-6">
+                        <div className="flex gap-4 justify-between items-center mb-6">
+                            <h2 className="text-xl font-semibold text-gray-800">Professional Profile</h2>
+                            {isEditingProfile ? (
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={handleSaveProfile}
+                                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow-md transition text-sm"
+                                    >
+                                        Save Profile
+                                    </button>
+                                    <button
+                                        onClick={() => setIsEditingProfile(false)}
+                                        className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg shadow-md transition text-sm"
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            ) : (
+                                <button
+                                    onClick={() => setIsEditingProfile(true)}
+                                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-md transition text-sm"
+                                >
+                                    Edit Profile
+                                </button>
+                            )}
+                        </div>
+                        <ProfileSections 
+                            employeeData={employeeData} 
+                            isEditing={isEditingProfile}
+                            profileSections={profileSections}
+                            setProfileSections={setProfileSections}
+                        />
+                    </div>
                 </div>
             </main>
 

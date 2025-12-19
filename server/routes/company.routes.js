@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { changeJobApplicationStatus, changeVisibility, getCompanyData, getCompanyJobApplicants, getCompanyPostedJobs, loginCompany, logoutCompany, postJob, registerCompany } from "../controllers/company.controller.js";
+import { changeJobApplicationStatus, changeVisibility, getCompanyData, getCompanyJobApplicants, getCompanyPostedJobs, loginCompany, logoutCompany, postJob, registerCompany, updateCompanyProfile, getPublicCompanyProfile, getCompanyAnalytics, deleteJob } from "../controllers/company.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyCompanyJWT } from "../middlewares/authCompany.middleware.js";
 import { loginLimiter, uploadLimiter } from '../middlewares/rateLimiter.middleware.js';
@@ -21,5 +21,15 @@ router.get('/list-jobs', verifyCompanyJWT, getCompanyPostedJobs)
 
 router.post('/change-status', verifyCompanyJWT, changeJobApplicationStatus)
 router.post('/change-visibility', verifyCompanyJWT, changeVisibility)
+
+// Company profile routes
+router.patch('/update-profile', verifyCompanyJWT, updateCompanyProfile)
+router.get('/profile/:companyId', getPublicCompanyProfile)
+
+// Analytics route
+router.get('/analytics', verifyCompanyJWT, getCompanyAnalytics)
+
+// Delete job route
+router.delete('/delete-job', verifyCompanyJWT, deleteJob)
 
 export default router

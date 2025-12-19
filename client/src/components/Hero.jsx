@@ -1,10 +1,11 @@
 import { useContext, useRef } from 'react'
 import { assets } from '../assets/assets'
 import { AppContext } from '../context/AppContext'
+import { Link } from 'react-router-dom'
 
 function Hero() {
 
-    const {setSearchFilter, setIsSearched} = useContext(AppContext)
+    const {setSearchFilter, setIsSearched, employeeToken} = useContext(AppContext)
 
     const titleRef = useRef(null)
     const locationRef = useRef(null)
@@ -27,7 +28,15 @@ function Hero() {
                 
                 <div className='relative z-10'>
                     <h2 className='text-3xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight'>Discover Your Dream Job</h2>
-                    <p className='mb-10 max-w-2xl mx-auto text-base md:text-lg font-light px-5 text-blue-50'>Over 10,000+ opportunities waiting for you. Start your career journey today!</p>
+                    <p className='mb-8 max-w-2xl mx-auto text-base md:text-lg font-light px-5 text-blue-50'>Over 10,000+ opportunities waiting for you. Start your career journey today!</p>
+                    
+                    {employeeToken && (
+                        <div className='mb-8'>
+                            <Link to='/career-tools' className='inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-full font-semibold hover:bg-white/30 transition-all duration-300 transform hover:scale-105'>
+                                🚀 Try Career Tools
+                            </Link>
+                        </div>
+                    )}
 
                     <div className='flex items-center justify-between bg-white rounded-2xl text-gray-600 max-w-3xl mx-4 sm:mx-auto shadow-xl p-2'>
                         <div className='flex items-center flex-1 px-3'>

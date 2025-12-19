@@ -7,6 +7,7 @@ import kconvert from 'k-convert'
 import moment from 'moment'
 import JobCard from '../components/JobCard'
 import Footer from '../components/Footer/Footer'
+import ContextualFAQ from '../components/ContextualFAQ'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 
@@ -92,14 +93,14 @@ function ApplyJobs() {
                     <div className='flex justify-center md:justify-between flex-wrap gap-8 px-8 md:px-14 py-16 mb-8 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 border-2 border-blue-200 rounded-2xl'>
                         {/* left side of the top card along with company details */}
                         <div className='flex flex-col md:flex-row items-center'>
-                            <img className='h-24 w-24 bg-white rounded-2xl p-4 mr-6 max-md:mb-4 shadow-md object-contain' src={jobData.companyId.image} alt="" />
+                            <img className='h-24 w-24 bg-white rounded-2xl p-4 mr-6 max-md:mb-4 shadow-md object-contain' src={jobData.companyId?.image || assets.company_icon} alt="" />
                             <div className='text-center md:text-left text-neutral-700'>
                                 <h1 className='text-3xl sm:text-4xl font-bold text-gray-800 mb-3'>{jobData.title}</h1>
 
                                 <div className='flex flex-row flex-wrap max-md:justify-center gap-y-2 gap-6 items-center text-gray-700 mt-3'>
                                     <span className='flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm font-medium'>
                                         <img src={assets.suitcase_icon} alt="" className='w-4 h-4' />
-                                        {jobData.companyId.name}
+                                        {jobData.companyId?.name || 'Company'}
                                     </span>
 
                                     <span className='flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm font-medium'>
@@ -155,8 +156,9 @@ function ApplyJobs() {
 
                         {/* Right part of the job description page */}
                         <div className='w-full lg:w-1/3 mt-8 lg:mt-0 space-y-5'>
-                            <h2 className='text-xl font-bold text-gray-800 mb-4'>More from {jobData.companyId.name}</h2>
-                            {jobs.filter(job => job._id != jobData._id && job.companyId._id == jobData.companyId._id)
+                            <ContextualFAQ type="apply" />
+                            <h2 className='text-xl font-bold text-gray-800 mb-4'>More from {jobData.companyId?.name || 'this company'}</h2>
+                            {jobs.filter(job => job._id != jobData._id && job.companyId?._id == jobData.companyId?._id)
                                 .filter(job => { // This filter removes jobs the user has already applied
                                     // Set of applied JobIds
                                     const appliedJobIds = new Set(userApplications.map(app => app.jobId && app.jobId._id));

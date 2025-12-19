@@ -20,8 +20,13 @@ function JobCard({ job }) {
     return (
         <div className='bg-white border border-gray-200 shadow-md hover:shadow-xl p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 card-hover group'>
             <div className='flex items-center justify-between mb-4'>
-                <img className='h-10 w-10 object-contain rounded-lg bg-gray-50 p-1.5' src={job.companyId.image} alt="" />
-                <span className='text-xs font-semibold text-gray-400 uppercase tracking-wide'>{job.companyId.name}</span>
+                <img className='h-10 w-10 object-contain rounded-lg bg-gray-50 p-1.5' src={job.companyId?.image || assets.company_icon} alt="" />
+                <button
+                    onClick={() => navigate(`/company/${job.companyId?._id}`)}
+                    className='text-xs font-semibold text-gray-400 hover:text-blue-600 uppercase tracking-wide transition-colors'
+                >
+                    {job.companyId?.name || 'Company'}
+                </button>
             </div>
 
             <h4 className='font-bold text-xl mt-3 text-gray-800 group-hover:text-blue-600 transition-colors line-clamp-2'>{job.title}</h4>

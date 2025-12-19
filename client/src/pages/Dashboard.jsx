@@ -1,17 +1,18 @@
 import { useContext, useEffect } from 'react'
-import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { assets } from '../assets/assets'
 import { AppContext } from '../context/AppContext';
 
 function Dashboard() {
     const navigate = useNavigate();
+    const location = useLocation();
     const { companyData, logoutCompany } = useContext(AppContext);
 
     useEffect(() => {
-        if(companyData){
-            navigate('/dashboard/add-job')
+        if(companyData && location.pathname === '/dashboard'){
+            navigate('/dashboard/analytics')
         }
-    }, [companyData])
+    }, [companyData, location.pathname])
 
     return (
         <div className='min-h-screen bg-gray-50'>
@@ -19,7 +20,7 @@ function Dashboard() {
             <div className='bg-white shadow-sm border-b border-gray-200 py-4 sticky top-0 z-40'>
                 <div className='px-5 flex justify-between items-center'> 
                     <img onClick={e => {
-                        if (companyData) navigate('/dashboard')
+                        if (companyData) navigate('/dashboard/analytics')
                         else navigate('/')
                     }} className='max-sm:w-32 cursor-pointer hover:opacity-80 transition-opacity h-10' src={assets.logo} alt="" />
 
@@ -52,6 +53,13 @@ function Dashboard() {
                 {/* Left Sidebar with options to Add Jobs, Manage Jobs and View Applications */}
                 <div className='min-h-screen inline-block bg-white border-r border-gray-200 shadow-sm'>
                     <ul className='flex flex-col items-start pt-6 text-gray-700'>
+                        <NavLink className={({isActive}) => `flex items-center p-4 sm:px-6 gap-3 w-full hover:bg-blue-50 transition-all duration-200 font-medium ${isActive && 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-600 border-r-4 text-blue-700'}`} to={'/dashboard/analytics'}>
+                            <svg className='w-5 h-5' fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                            <p className='max-sm:hidden'>Analytics</p>
+                        </NavLink>
+
                         <NavLink className={({isActive}) => `flex items-center p-4 sm:px-6 gap-3 w-full hover:bg-blue-50 transition-all duration-200 font-medium ${isActive && 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-600 border-r-4 text-blue-700'}`} to={'/dashboard/add-job'}>
                             <img className='w-5 h-5' src={assets.add_icon} alt="" />
                             <p className='max-sm:hidden'>Add Job</p>
@@ -65,6 +73,13 @@ function Dashboard() {
                         <NavLink className={({isActive}) => `flex items-center p-4 sm:px-6 gap-3 w-full hover:bg-blue-50 transition-all duration-200 font-medium ${isActive && 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-600 border-r-4 text-blue-700'}`} to={'/dashboard/view-applications'}>
                             <img className='w-5 h-5' src={assets.person_tick_icon} alt="" />
                             <p className='max-sm:hidden'>View Applications</p>
+                        </NavLink>
+
+                        <NavLink className={({isActive}) => `flex items-center p-4 sm:px-6 gap-3 w-full hover:bg-blue-50 transition-all duration-200 font-medium ${isActive && 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-600 border-r-4 text-blue-700'}`} to={'/dashboard/company-profile'}>
+                            <svg className='w-5 h-5' fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-2 0H3m2-2v-2a2 2 0 012-2h2a2 2 0 012 2v2m0 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v10.02" />
+                            </svg>
+                            <p className='max-sm:hidden'>Company Profile</p>
                         </NavLink>
                     </ul>
                 </div>

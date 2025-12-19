@@ -11,6 +11,8 @@ function JobListing() {
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedCategories, setSelectedCategories] = useState([])
     const [selectedLocation, setSelectedLocation] = useState([])
+    const [showAllCategories, setShowAllCategories] = useState(false)
+    const [showAllLocations, setShowAllLocations] = useState(false)
 
     // to store the filtered job data
     const [filteredJobs, setFilteredJobs] = useState(jobs)
@@ -103,7 +105,7 @@ function JobListing() {
                     <h4 className='font-bold text-lg py-4 text-gray-800 border-b border-gray-200'>Categories</h4>
                     <ul className='space-y-3 text-gray-700 mt-4'>
                         {
-                            JobCategories.map((category, index) => (
+                            (showAllCategories ? JobCategories : JobCategories.slice(0, 5)).map((category, index) => (
                                 <li className='flex gap-3 items-center hover:bg-blue-50 p-2 rounded-lg transition-colors cursor-pointer' key={index}>
                                     <input 
                                     className='w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer' 
@@ -117,6 +119,14 @@ function JobListing() {
                             ))
                         }
                     </ul>
+                    {JobCategories.length > 5 && (
+                        <button 
+                            onClick={() => setShowAllCategories(!showAllCategories)}
+                            className='mt-3 text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors'
+                        >
+                            {showAllCategories ? 'Show Less' : `Show More (${JobCategories.length - 5})`}
+                        </button>
+                    )}
                 </div>
 
                 {/* Location filter */}
@@ -124,7 +134,7 @@ function JobListing() {
                     <h4 className='pt-8 font-bold text-lg py-4 text-gray-800 border-b border-gray-200'>Locations</h4>
                     <ul className='space-y-3 text-gray-700 mt-4'>
                         {
-                            JobLocations.map((location, index) => (
+                            (showAllLocations ? JobLocations : JobLocations.slice(0, 5)).map((location, index) => (
                                 <li className='flex gap-3 items-center hover:bg-blue-50 p-2 rounded-lg transition-colors cursor-pointer' key={index}>
                                     <input 
                                     className='w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer' 
@@ -141,6 +151,14 @@ function JobListing() {
                             ))
                         }
                     </ul>
+                    {JobLocations.length > 5 && (
+                        <button 
+                            onClick={() => setShowAllLocations(!showAllLocations)}
+                            className='mt-3 text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors'
+                        >
+                            {showAllLocations ? 'Show Less' : `Show More (${JobLocations.length - 5})`}
+                        </button>
+                    )}
                 </div>
 
             </div>

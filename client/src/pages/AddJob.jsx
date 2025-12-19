@@ -1,6 +1,7 @@
 import { useContext, useEffect, useRef, useState } from 'react'
 import Quill from 'quill';
 import { JobCategories, JobLocations } from '../assets/assets';
+import ContextualFAQ from '../components/ContextualFAQ';
 import axios from 'axios';
 import { AppContext } from '../context/AppContext';
 import { toast } from 'react-toastify';
@@ -29,7 +30,7 @@ function AddJob() {
                 location,
                 category,
                 level,
-                salary
+                salary: Number(salary)
                 },
                 { headers: { token: companyToken }}
             )
@@ -122,6 +123,8 @@ function AddJob() {
             <button className='bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold mt-4 px-8 py-3 rounded-xl cursor-pointer hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5'>
                 Post Job
             </button>
+            
+            <ContextualFAQ type="postJob" />
         </form>
     )
 }

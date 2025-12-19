@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { assets } from '../assets/assets'
 import { AppContext } from '../context/AppContext'
 import axios from 'axios';
@@ -88,7 +89,12 @@ function ViewApplications() {
                                 <td className='px-4 py-2 text-center border-b border-gray-200'>{index + 1}</td>
                                 <td className='px-4 py-2 text-center border-b border-gray-200 flex items-center'>
                                     <img className='w-10 h-10 rounded-full mr-3 max-sm:hidden' src={applicant.userId.image} alt="" />
-                                    <span>{applicant.userId.fullName}</span>
+                                    <Link 
+                                        to={`/user/${applicant.userId._id}`}
+                                        className="text-blue-600 hover:text-blue-800 font-medium"
+                                    >
+                                        {applicant.userId.fullName}
+                                    </Link>
                                 </td>
 
                                 <td className='px-4 py-2 border-b border-gray-200 max-sm:hidden'>{applicant.jobId.title}</td>
@@ -122,12 +128,13 @@ function ViewApplications() {
 
                 </table>
             </div>
+
+
         </div>
     )
-    : <div>
-        <p>Loading...</p>
+    : <div className="flex justify-center items-center py-20">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
     </div>
-        // : <Loading />
 }
 
 export default ViewApplications
