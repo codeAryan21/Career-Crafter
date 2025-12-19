@@ -1,11 +1,23 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    tailwindcss(),
-    react()
-  ],
+  plugins: [react()],
+  css: {
+    postcss: './postcss.config.js'
+  },
+  build: {
+    target: 'es2015',
+    minify: 'esbuild',
+    rollupOptions: {
+      treeshake: false,
+      output: {
+        manualChunks: undefined,
+        format: 'es'
+      }
+    }
+  },
+  esbuild: {
+    target: 'es2015'
+  }
 })
