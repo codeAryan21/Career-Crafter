@@ -67,7 +67,7 @@ function ApplyJobs() {
 
     // Function to check whether the user is already applied for a job or not.
     const checkWhetherApplied = () => {
-        const hasApplied = userApplications.some(item => item.jobId._id == jobData._id)
+        const hasApplied = userApplications.some(item => item.jobId && item.jobId._id === jobData._id)
         setIsAlreadyApplied(hasApplied);
     }
 

@@ -38,7 +38,7 @@ function UserLogin() {
                 }, { withCredentials: true });
                 
                 if (data.success) {
-                    console.log(data);
+                    // console.log(data);
                     toast.success(data.message)
                     setEmployeeData(data.data.user);
                     setEmployeeToken(data.data.token);
@@ -63,7 +63,7 @@ function UserLogin() {
                 const { data } = await axios.post(`${backendUrl}/api/users/register`, formData, { withCredentials: true });
 
                 if (data.success) {
-                    console.log(data);
+                    // console.log(data);
                     toast.success(data.message)
                     setEmployeeData(data.data.user);
                     setEmployeeToken(data.data.token);
