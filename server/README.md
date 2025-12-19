@@ -18,12 +18,27 @@ This folder contains the backend code for Career Crafter, a modern job portal we
 - 📊 Job application tracking and management
 - 📈 Application status updates
 - 📊 Company-specific job management
+- 🎯 **Smart job matching** algorithm
+- 🤖 **AI-powered job recommendations**
+
+### Resume & Career Tools
+- 📋 **Resume parsing** from PDF files
+- 🔧 **Resume builder** with multiple templates
+- 📄 **PDF generation** for resumes
+- ⚙️ **User preferences** management
+- 🚀 **Career tools** suite
 
 ### File Management
 - ☁️ Cloudinary integration for resume and image uploads
 - 📄 File validation and security checks
 - 🖼️ Company logo management
 - 📎 Resume download functionality
+
+### Analytics & Profiles
+- 📈 **Recruiter analytics** dashboard
+- 🏢 **Company profile** management
+- 👥 **Public user profiles** for recruiters
+- 👤 **Public company profiles** for job seekers
 
 ### Communication
 - 📧 Email notifications with Nodemailer
@@ -120,6 +135,7 @@ server/
 │   ├── auth.controller.js    # Authentication (login, register, password reset)
 │   ├── company.controller.js # Company management and recruiter operations
 │   ├── job.controller.js     # Job CRUD operations and search
+│   ├── resume.controller.js  # Resume parsing, building, and management
 │   └── user.controller.js    # User profile and application management
 ├── dB/
 │   └── dB.js                 # MongoDB connection configuration
@@ -132,14 +148,16 @@ server/
 │   ├── rateLimiter.middleware.js # API rate limiting
 │   └── validate.middleware.js    # Input validation middleware
 ├── models/                   # Mongoose database schemas
-│   ├── user.model.js         # User schema and methods
 │   ├── company.model.js      # Company/recruiter schema
 │   ├── job.model.js          # Job listing schema
-│   └── jobApplication.model.js # Job application schema
+│   ├── jobApplication.model.js # Job application schema
+│   ├── resume.model.js       # Resume schema for builder/parser
+│   └── user.model.js         # User schema and methods
 ├── routes/                   # API route definitions
 │   ├── auth.routes.js        # Authentication routes
 │   ├── company.routes.js     # Company management routes
 │   ├── job.routes.js         # Job-related routes
+│   ├── resume.routes.js      # Resume parsing and building routes
 │   └── user.routes.js        # User management routes
 ├── utils/                    # Utility functions
 │   ├── ApiError.js           # Custom error class
@@ -188,6 +206,14 @@ server/
 - `DELETE /:id` - Delete job (company only)
 - `POST /:id/apply` - Apply for job (user only)
 - `GET /:id/applications` - Get job applications (company only)
+- `GET /recommendations/:userId` - Get AI job recommendations
+
+### Resume Routes (`/api/resume`)
+- `POST /parse` - Parse PDF resume and extract data
+- `POST /build` - Generate resume PDF from template
+- `GET /:userId` - Get user's resume data
+- `PUT /:userId` - Update resume data
+- `DELETE /:userId` - Delete resume data
 
 ## 📜 Available Scripts
 

@@ -9,16 +9,23 @@ This folder contains the frontend code for Career Crafter, a modern job portal w
 - 📝 Apply for jobs with resume upload
 - 📄 Download and manage resumes
 - 📊 Track application status
-- 👤 User profile management
+- 👤 User profile management with public view
 - 🔐 Secure JWT-based authentication
 - 🔑 Password reset functionality with OTP
+- 🤖 **AI-powered job recommendations** based on skills and preferences
+- 📋 **Resume parser** to extract skills and experience from PDFs
+- 🔧 **Resume builder** with multiple templates and PDF export
+- ⚙️ **User preferences** for personalized experience
+- 🚀 **Career tools** suite for professional development
 
 ### For Recruiters
 - ➕ Post new job listings with rich text editor (Quill)
 - 🛠️ Edit and manage existing jobs
 - 👀 View and manage job applications
-- 📈 Dashboard with job statistics
+- 📈 **Recruiter analytics** dashboard with detailed insights
 - 📊 Application management interface
+- 🏢 **Company profile** management with public view
+- 👥 View **public user profiles** of applicants
 
 ### General Features
 - 📱 Fully responsive design with Tailwind CSS
@@ -27,6 +34,8 @@ This folder contains the frontend code for Career Crafter, a modern job portal w
 - 🔔 Toast notifications for user feedback
 - ⚡ Fast loading with Vite build tool
 - 📊 Real-time data with Axios
+- ❓ **FAQ system** with contextual help
+- 🎯 **Smart job matching** algorithm
 
 ## 🛠️ Tech Stack
 - **React 19** - Latest React with modern features
@@ -95,10 +104,21 @@ client/
 │   │   ├── Footer/           # Footer component
 │   │   ├── Navbar/           # Navigation component
 │   │   ├── AppDownload.jsx   # App download section
+│   │   ├── CompanyProfile.jsx# Company profile management
+│   │   ├── ContextualFAQ.jsx # Context-aware FAQ component
+│   │   ├── FAQ.jsx           # General FAQ component
 │   │   ├── Hero.jsx          # Hero section
 │   │   ├── JobCard.jsx       # Job listing card
 │   │   ├── JobListing.jsx    # Job listings container
+│   │   ├── JobRecommendations.jsx # AI job recommendations
+│   │   ├── Preferences.jsx   # User preference management
+│   │   ├── ProfileSections.jsx # Profile section components
+│   │   ├── PublicCompanyProfile.jsx # Public company view
+│   │   ├── PublicUserProfile.jsx # Public user profile view
+│   │   ├── RecruiterAnalytics.jsx # Analytics dashboard
 │   │   ├── RecruiterLogin.jsx# Recruiter login form
+│   │   ├── ResumeBuilder.jsx # Resume creation tool
+│   │   ├── ResumeParser.jsx  # PDF resume parsing
 │   │   ├── UserLogin.jsx     # User login form
 │   │   └── UserProfile.jsx   # User profile component
 │   ├── context/              # React context for state management
@@ -106,12 +126,14 @@ client/
 │   │   ├── Home.jsx          # Landing page
 │   │   ├── Dashboard.jsx     # User/Recruiter dashboard
 │   │   ├── AddJob.jsx        # Job posting page
-│   │   ├── ManageJobs.jsx    # Job management page
 │   │   ├── Applications.jsx  # User applications page
 │   │   ├── ApplyJobs.jsx     # Job application page
-│   │   ├── ViewApplications.jsx # View job applications
+│   │   ├── CareerTools.jsx   # Career tools suite page
+│   │   ├── FAQPage.jsx       # FAQ page
 │   │   ├── ForgotPassword.jsx   # Password reset request
-│   │   └── ResetPassword.jsx    # Password reset form
+│   │   ├── ManageJobs.jsx    # Job management page
+│   │   ├── ResetPassword.jsx    # Password reset form
+│   │   └── ViewApplications.jsx # View job applications
 │   ├── App.jsx               # Main App component with routing
 │   ├── main.jsx              # Application entry point
 │   ├── App.css               # Component-specific styles

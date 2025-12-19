@@ -11,18 +11,24 @@ Career Crafter is a full-featured job portal web application designed to connect
 - 📝 Apply for jobs directly through the platform
 - 📄 Upload and download resumes
 - 📊 Track application status
-- 👤 Manage your profile
+- 👤 Manage your profile with public view option
 - 🔐 Secure JWT-based authentication
 - 🔑 Password reset functionality with OTP
 - 🤖 **AI-powered job recommendations** based on skills and preferences
 - 📋 **Resume parser** to extract skills and experience from PDFs
 - 🔧 **Resume builder** with multiple templates and PDF export
+- ⚙️ **User preferences** for personalized job matching
+- 🚀 **Career tools** suite for professional development
+- ❓ **FAQ system** with contextual help
 
 ### For Recruiters
 - ➕ Post new job listings with rich text editor
 - 🛠️ Edit and manage existing jobs
 - 👀 View and manage applications
 - 🔐 Secure recruiter authentication and dashboard
+- 📊 **Advanced analytics** dashboard with detailed insights
+- 🏢 **Company profile** management with public view
+- 👥 **View public user profiles** of job applicants
 - 📈 Monitor job visibility and applicant stats
 
 ### General
@@ -33,6 +39,8 @@ Career Crafter is a full-featured job portal web application designed to connect
 - 📧 Email functionality with Nodemailer
 - 🎯 **Smart job matching** algorithm
 - 📈 **User preference management** for personalized experience
+- 🔍 **Enhanced job filtering** with show more/less functionality
+- 📊 **Real-time analytics** and insights
 
 ---
 
@@ -45,8 +53,9 @@ Career Crafter is a full-featured job portal web application designed to connect
 - **Email:** Nodemailer
 - **Validation:** Zod
 - **Security:** Helmet, XSS Clean, Rate Limiting
-- **AI/ML:** PDF parsing, Job recommendation engine
-- **PDF Generation:** Puppeteer
+- **AI:** PDF parsing, Job recommendation engine, Smart matching
+- **PDF Generation:** Puppeteer for resume building
+- **Analytics:** Real-time insights and reporting
 
 ---
 
@@ -62,13 +71,24 @@ Career Crafter/
 │   │   ├── components/       # Reusable UI components
 │   │   │   ├── Footer/       # Footer component
 │   │   │   ├── Navbar/       # Navigation component
-│   │   │   └── ...           # Other components
+│   │   │   ├── CompanyProfile.jsx    # Company profile management
+│   │   │   ├── JobRecommendations.jsx # AI job recommendations
+│   │   │   ├── Preferences.jsx       # User preference settings
+│   │   │   ├── PublicCompanyProfile.jsx # Public company view
+│   │   │   ├── PublicUserProfile.jsx # Public user profile
+│   │   │   ├── RecruiterAnalytics.jsx # Analytics dashboard
+│   │   │   ├── ResumeBuilder.jsx     # Resume creation tool
+│   │   │   ├── ResumeParser.jsx      # PDF resume parsing
+│   │   │   ├── FAQ.jsx              # FAQ components
+│   │   │   └── ...                   # Other components
 │   │   ├── context/          # React context files
 │   │   ├── pages/            # Page components
 │   │   │   ├── Home.jsx      # Landing page
 │   │   │   ├── Dashboard.jsx # User/Recruiter dashboard
 │   │   │   ├── AddJob.jsx    # Job posting page
 │   │   │   ├── ManageJobs.jsx# Job management
+│   │   │   ├── CareerTools.jsx # Career tools suite
+│   │   │   ├── FAQPage.jsx   # FAQ page
 │   │   │   └── ...           # Other pages
 │   │   ├── App.jsx           # Main App component
 │   │   ├── main.jsx          # Entry point
@@ -83,6 +103,7 @@ Career Crafter/
 │   │   ├── auth.controller.js    # Authentication logic
 │   │   ├── company.controller.js # Company management
 │   │   ├── job.controller.js     # Job operations
+│   │   ├── resume.controller.js  # Resume parsing/building
 │   │   └── user.controller.js    # User management
 │   ├── dB/                   # Database connection
 │   ├── middlewares/          # Custom middlewares
@@ -94,11 +115,15 @@ Career Crafter/
 │   │   ├── user.model.js     # User schema
 │   │   ├── company.model.js  # Company schema
 │   │   ├── job.model.js      # Job schema
-│   │   └── jobApplication.model.js # Application schema
+│   │   ├── jobApplication.model.js # Application schema
+│   │   └── resume.model.js   # Resume schema
 │   ├── routes/               # Express routes
 │   ├── utils/                # Utility functions
 │   │   ├── cloudinary.js     # File upload utilities
 │   │   ├── email.js          # Email utilities
+│   │   ├── resumeParser.js   # PDF parsing utilities
+│   │   ├── pdfGenerator.js   # PDF generation utilities
+│   │   ├── jobMatcher.js     # Job recommendation engine
 │   │   └── ...               # Other utilities
 │   ├── validators/           # Input validation schemas
 │   ├── logs/                 # Application logs
