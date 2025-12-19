@@ -19,28 +19,32 @@ function JobListing() {
 
     // If the selected category is already their then it will removed, if it is not their then we add it.
     const handleCategoryChange = (category) => {
-        setSelectedCategories(
-            prev => prev.includes(category) // if it includes then we remove the category from the array
-            ? prev.filter(c => c != category)
-            : [...prev,category]
-        )
+        setSelectedCategories(prev => {
+            if (prev.includes(category)) {
+                return prev.filter(c => c !== category)
+            } else {
+                return [...prev, category]
+            }
+        })
     }    
 
     const handleLocationChange = (location) => {
-        setSelectedLocation(
-            prev => prev.includes(location) // if it includes then we remove the category from the array
-            ? prev.filter(l => l != location)
-            : [...prev,location]
-        )
+        setSelectedLocation(prev => {
+            if (prev.includes(location)) {
+                return prev.filter(l => l !== location)
+            } else {
+                return [...prev, location]
+            }
+        })
     }
 
     useEffect(() => {
         // that filter the data according to our filter
-        const matchesCategory = job => selectedCategories.length == 0 || selectedCategories.includes(job.category);
-        const matchesLocation = job => selectedLocation.length == 0 || selectedLocation.includes(job.location);
+        const matchesCategory = job => selectedCategories.length === 0 || selectedCategories.includes(job.category);
+        const matchesLocation = job => selectedLocation.length === 0 || selectedLocation.includes(job.location);
 
         const matchesTitle = job => {
-            if (searchFilter.title == "") return true;
+            if (searchFilter.title === "") return true;
             const searchTerm = searchFilter.title.toLowerCase();
             const titleMatch = job.title.toLowerCase().includes(searchTerm) ||
                              job.category.toLowerCase().includes(searchTerm);
@@ -48,7 +52,7 @@ function JobListing() {
         }
         
         const matchesSearchLocation = job => {
-            if (searchFilter.location == "") return true;
+            if (searchFilter.location === "") return true;
             const searchLocation = searchFilter.location.toLowerCase();
             const locationMatch = job.location.toLowerCase().includes(searchLocation);
             return locationMatch;
@@ -70,7 +74,7 @@ function JobListing() {
             <div className='w-full lg:w-1/4 bg-white px-6 py-6 rounded-2xl shadow-md h-fit lg:sticky lg:top-24'>
                 {/* Search filter from Hero component */}
                 {
-                    isSearched && (searchFilter.title != "" || searchFilter.location != "") && (
+                    isSearched && (searchFilter.title !== "" || searchFilter.location !== "") && (
                         <>
                             <h3 className='font-bold text-lg mb-4 text-gray-800'>Active Filters</h3>
                             <div className='mb-6 flex flex-wrap gap-2'>
@@ -191,7 +195,7 @@ function JobListing() {
                                 <button
                                     onClick={() => setCurrentPage(index + 1)}
                                     className={`w-10 h-10 flex items-center justify-center border-2 rounded-lg font-semibold transition-all ${
-                                        currentPage == index + 1 
+                                        currentPage === index + 1 
                                         ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-blue-600 shadow-lg' 
                                         : 'bg-white text-gray-600 border-gray-300 hover:border-blue-500 hover:bg-blue-50'
                                     }`}>
