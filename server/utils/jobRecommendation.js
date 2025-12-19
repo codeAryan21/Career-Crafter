@@ -47,7 +47,7 @@ export const getJobRecommendations = async (userId, userSkills, preferences) => 
             jobs.sort((a, b) => b.matchScore - a.matchScore);
         }
 
-        return jobs.slice(0, 10); // Return top 10 recommendations
+        return jobs.slice(0, 10);
     } catch (error) {
         console.error('Error getting job recommendations:', error);
         throw new Error('Failed to get job recommendations');

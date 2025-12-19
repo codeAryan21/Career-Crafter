@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState} from 'react';
 
 function ProfileSections({ employeeData, isEditing, profileSections, setProfileSections }) {
     const [newSkill, setNewSkill] = useState('');

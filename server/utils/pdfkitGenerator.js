@@ -12,7 +12,7 @@ export const generateResumePDFKit = (resumeData) => {
                 resolve(pdfData);
             });
 
-            const pageWidth = doc.page.width - 100; // Account for margins
+            const pageWidth = doc.page.width - 100;
             let yPosition = 50;
 
             // Header Section
@@ -44,7 +44,6 @@ export const generateResumePDFKit = (resumeData) => {
             doc.strokeColor('#e5e7eb').lineWidth(1).moveTo(50, yPosition).lineTo(pageWidth + 50, yPosition).stroke();
             yPosition += 25;
 
-            // Helper function for section headers
             const addSectionHeader = (title) => {
                 doc.fontSize(14).fillColor('#1f2937').text(title.toUpperCase(), 50, yPosition);
                 yPosition += 25;

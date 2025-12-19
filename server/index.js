@@ -5,8 +5,6 @@ import 'dotenv/config'
 import connectDB from './dB/dB.js'
 import errorHandler from './middlewares/errorHandler.middleware.js'
 import helmet from 'helmet';
-import mongoSanitize from 'express-mongo-sanitize';
-import xss from 'xss-clean';
 import { apiLimiter } from './middlewares/rateLimiter.middleware.js';
 
 
